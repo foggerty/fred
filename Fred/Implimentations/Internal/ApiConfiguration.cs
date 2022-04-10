@@ -33,7 +33,7 @@ internal class ApiConfiguration : IApiConfiguration
 
     #region Configure dependency injection
 
-    public IApiConfiguration RegisterSingleton<T>(Func<T>? create = null)
+    public IApiConfiguration RegisterSingleton<T>(Func<T> create)
     {
         _serviceSetup.RegisterSession<T>(create);
 
@@ -48,7 +48,7 @@ internal class ApiConfiguration : IApiConfiguration
         return this;
     }
 
-    public IApiConfiguration RegisterTransient<T>(Func<T>? create = null)
+    public IApiConfiguration RegisterTransient<T>(Func<T> create)
     {
         _serviceSetup.RegisterTransient<T>(create);
 
@@ -63,7 +63,7 @@ internal class ApiConfiguration : IApiConfiguration
         return this;
     }
 
-    public IApiConfiguration RegisterSession<T>(Func<T>? create = null)
+    public IApiConfiguration RegisterSession<T>(Func<T> create)
     {
         _serviceSetup.RegisterSession<T>(create);
 

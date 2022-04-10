@@ -44,5 +44,5 @@ internal class Server : IServerConfiguration, IServer
     public void StopApis(TimeSpan timeout)
     {
         throw new NotImplementedException();
-    }        
+    }
 }

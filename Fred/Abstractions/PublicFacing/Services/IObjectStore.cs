@@ -1,10 +1,8 @@
-using Fred.Abstractions.PublicFacing;
-
 namespace Fred.Abstractions.PublicFacing.Services
 {
     public interface IObjectStore : IService
     {
-        void Add<T>(object key, T value);
+        void Add(object key, object value);
 
         T Get<T>(object key);
     }
