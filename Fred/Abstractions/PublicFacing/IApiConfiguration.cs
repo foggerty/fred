@@ -10,20 +10,7 @@ namespace Fred.Abstractions.PublicFacing
 
         /* Configure dependency injection. */
         
-        public IApiConfiguration RegisterSingleton<T>(Func<T> create);
-
-        public IApiConfiguration RegisterSingleton<T, API>(Func<T> create)
-            where API : IApiDefinition;
-
-        public IApiConfiguration RegisterTransient<T>(Func<T> create);
-
-        public IApiConfiguration RegisterTransient<T, API>(Func<T> create)
-            where API : IApiDefinition;
-
-        public IApiConfiguration RegisterSession<T>(Func<T> create);
-
-        public IApiConfiguration RegisterSession<T, API>(Func<T> create)
-            where API : IApiDefinition;
+        public IApiConfiguration SetupServices(Action<IServiceLocatorSetup> setup);
 
         /* Certificate setup */
 
@@ -31,8 +18,12 @@ namespace Fred.Abstractions.PublicFacing
 
         public IApiConfiguration UseCertificate(string store, string thumbprint);
 
+        /* Access various local resources */
+
+        public IApiConfiguration AllowAccessToFileSystem();
+
         /* Finish configuration, spin up server and hand over control. */
         
-        public IServer Done();
+        public IServer Done();        
     }
 }

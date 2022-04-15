@@ -4,3 +4,4 @@ public partial interface IServiceLocator
 {
     public T Get<T>();    
 }
+

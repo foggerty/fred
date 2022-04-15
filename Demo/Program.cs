@@ -1,7 +1,7 @@
 ﻿using Fred;
 using Demo.APIs.Wombat;
 using Demo.APIs.Weather;
-using Fred.Abstractions.PublicFacing.Services;
+using Fred.Abstractions.PublicFacing;
 
 var config = Bootstrap.ReadConfiguration();  // or provide your own
 
@@ -15,9 +15,16 @@ var server = Bootstrap
     .RegisterEndpoint<WombatApi, WombatEndpoint, string>()
     .RegisterEndpoint<WombatApi, WeatherEndpoint, int>()
 
-    .RegisterSingleton<IObjectStore>(() => null)
-    .RegisterTransient<IObjectStore, WeatherApi>(() => null)
+    .SetupServices(ServicesSetup)
 
     .Done();
 
 server.StartApis(TimeSpan.FromSeconds(30));
+
+
+void ServicesSetup(IServiceLocatorSetup setup)
+{
+    var fred = config.Database.ConnectionString;
+    
+    setup.RegisterSingleton<string, string>(x => fred);
+}

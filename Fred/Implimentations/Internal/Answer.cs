@@ -1,26 +1,24 @@
 using System.Net;
-
+using System.Text.Json;
 using Fred.Abstractions.PublicFacing;
 
-namespace Fred.Implimentations.PublicFacing
+namespace Fred.Implimentations.Internal
 {
-    internal class Answer<T> : IAnswer<T>
+    internal class Answer<T> : IAnswer
     {
         public Answer(T response, HttpStatusCode statusCode)
         {
             Response = response;
             StatusCode = statusCode;
-            ExtraHeaders = new List<(string, string)>();
         }
 
         public T Response { get; }
 
         public HttpStatusCode StatusCode { get; }
 
-        public ICollection<(string, string)> ExtraHeaders { get; }
-
-        public bool Cachable { get; set; }
-
-        public TimeSpan CacheLimit { get; set; }
+        public string AsJSON()
+        {
+            return JsonSerializer.Serialize(Response);
+        }
     }
 }

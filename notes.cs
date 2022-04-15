@@ -59,15 +59,12 @@
 // The threadpool etc, in fact a generic collection pool, should be available as services at 
 // the API level.  Not sure about endpoints though...
 
-// Make your own HttpContext with a custom service (that can be accessed by api/handler level wrappers)
-// in fact, in this context, would a HttpContext equivilent be a code smell?  Do some research on why people
-// actually use it.
-
 // Use the bootstrap code to then load in tables of types to build up the server in a loop.  Note that 
 // tests can then become the exact same tables, but with a couple of dpendencies swapped out.
 
 // Move cache out of IAnswer - setting cache tuning should be done in one place - match answer to cache
-// settings.
+// settings.  Also, cache should not be a concern of the handler.  It's there to answer quetions, not 
+// say what you can do with them.
 
 // Websockets API.
 
@@ -82,3 +79,31 @@
 // Add a X509StoreService (or certificate service).
 
 // Can I use a single store interface for all three OSs?
+
+// Everything in bootstrap/configuration etc can be viewed as a function - the private vars
+// are like a let statement in lisp.  This analogy only works if they are ONLY used like
+// so: create -> set privates -> use privates to create a "result" value, throw away object.
+// For instance, if you assign the result of Done() like:
+// var fred = new builder().DoStuffWithBuilder().Build();
+// then the builder (i.e. intermediate values) can be treated semantically as a function.  It's 
+// just a long-winded way of expressing one.
+
+// RESTful API - let's focus on the API bit.  REST is just how we're doing something.  It's
+// nowhere near as important as WHY we're doing something.  In other words, HTTP should never even
+// be mentioned, ANYWHERE in your Endpoint handlers.
+
+// Built in session management in the form of session tokens.  Is up to the handler and client
+// to make it meaningful.
+
+// HTTP headers are a part of the transport concern - endpoint handlers shouldn't even KNOW
+// when http is, that they're running inside a web service.  Which leads to:
+
+// Leaky abstractsion.  Every abstraction leaks to some degree.  The leak I want to plug
+// here, is that the code is running inside a web service.  That's it.  Endpoint handler code should
+// have ZERO idea about the context that it's running in.  It's handed a question, it asks for 0-many
+// resources to help it answer that question, and it returns an answer.
+// Therefore: no HttpContext.
+
+// Every time that I find myself thinking "asp.net has this, so should Fred", STOP, and ask why
+// it has it in the first place.  Maybe it's like HttpContext - i.e. a leaky abstraction - in which
+// case, figure out WHY it's used, and therefore how it can map onto existing abstrations.

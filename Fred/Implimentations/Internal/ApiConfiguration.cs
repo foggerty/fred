@@ -2,6 +2,7 @@ using System.Security.Cryptography.X509Certificates;
 
 using Fred.Abstractions.Internal;
 using Fred.Abstractions.PublicFacing;
+using Fred.Abstractions.PublicFacing.Services;
 using Fred.Exceptions;
 using Fred.Functions;
 
@@ -9,6 +10,8 @@ namespace Fred.Implimentations.Internal;
 
 internal class ApiConfiguration : IApiConfiguration
 {
+    private bool _allowAccessToFileSystem;
+    
     private readonly IServerConfiguration _server;
     private readonly IServiceLocatorSetup _serviceSetup;
 
@@ -32,71 +35,33 @@ internal class ApiConfiguration : IApiConfiguration
     #endregion
 
     #region Configure dependency injection
-
-    public IApiConfiguration RegisterSingleton<T>(Func<T> create)
+    
+    public IApiConfiguration SetupServices(Action<IServiceLocatorSetup> setup)
     {
-        _serviceSetup.RegisterSession<T>(create);
+        setup(_serviceSetup);
 
         return this;
     }
-
-    public IApiConfiguration RegisterSingleton<T, API>(Func<T> create)
-        where API : IApiDefinition
-    {
-        _serviceSetup.RegisterSingleton<T, API>(create);
-
-        return this;
-    }
-
-    public IApiConfiguration RegisterTransient<T>(Func<T> create)
-    {
-        _serviceSetup.RegisterTransient<T>(create);
-
-        return this;
-    }
-
-    public IApiConfiguration RegisterTransient<T, API>(Func<T> create)
-        where API : IApiDefinition
-    {
-        _serviceSetup.RegisterTransient<T, API>(create);
-
-        return this;
-    }
-
-    public IApiConfiguration RegisterSession<T>(Func<T> create)
-    {
-        _serviceSetup.RegisterSession<T>(create);
-
-        return this;
-    }
-
-    public IApiConfiguration RegisterSession<T, API>(Func<T> create)
-        where API : IApiDefinition
-    {
-        _serviceSetup.RegisterSession<T, API>(create);
-
-        return this;
-    }    
-
+    
     #endregion
 
     #region Certificate setup
 
     public IApiConfiguration UseSelfSignedCertificate()
     {
-        var cert =  new X509Certificate2();        
-        var store = new X509Store();
+        //var cert =  new X509Certificate2();        
+        //var store = new X509Store();
+        string storeName = "";
+        string thumbprint = "";
 
-        store.Open(OpenFlags.ReadWrite);
-        store.Add(cert);
+        //store.Open(OpenFlags.ReadWrite);
+        //store.Add(cert);
 
         // write to store so can be exported - ToDo: add functionality to save to path and skip store.
 
-        store.Close();
+        //store.Close();
 
-        _server.UseHttpsCertificate(cert);
-
-         return this;
+        return UseCertificate(storeName, thumbprint);
     }
 
     public IApiConfiguration UseCertificate(string storeName, string thumbprint)
@@ -123,12 +88,26 @@ internal class ApiConfiguration : IApiConfiguration
 
     #endregion
     
+    #region Open up access to local resources
+
+    public IApiConfiguration AllowAccessToFileSystem()
+    {
+        _allowAccessToFileSystem = true;
+
+        return this;
+    }
+    
+    #endregion
+    
     #region Finish configuration, spin up server and hand over control
 
     public IServer Done()
     {        
+        if(_allowAccessToFileSystem)
+            _serviceSetup.RegisterSingleton<IFileSystem, FileSystem>();
+        
         return _server;
-    }
+    }    
 
-    #endregion    
+    #endregion
 }

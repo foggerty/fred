@@ -1,12 +1,7 @@
-using System.Data;
-using System.Net.Http.Headers;
-using System.Security;
 using Fred.Abstractions.Internal;
 using Fred.Abstractions.PublicFacing;
-using Fred.Abstractions.PublicFacing.Services;
 using Fred.Exceptions;
 using Fred.Implimentations.Internal;
-using Fred.Implimentations.Internal.Services;
 
 namespace Fred;
 
@@ -25,19 +20,22 @@ public static class Bootstrap
         }
 
         var locator = ServiceLocator();
-        var server = new Server(configuration, (ServiceLocator)locator);
+        var server = new Server(configuration, locator);
         
         return new ApiConfiguration(server, locator);
     }
 
-    public static IServiceLocatorSetup ServiceLocator()
+    private static IServiceLocatorSetup ServiceLocator()
     {
         var locator = new ServiceLocator();
         
-        // Add standard services, available to all APIs.        
-
-        locator.RegisterSingleton<IObjectStore>(() => new ObjectStore());
+        RegistrerDefaultServices(locator);
 
         return locator;
+    }
+
+    private static void RegistrerDefaultServices(IServiceLocatorSetup locator)
+    {
+        locator.RegisterSingleton<IConfiguration, Configuration>();
     }
 }     
