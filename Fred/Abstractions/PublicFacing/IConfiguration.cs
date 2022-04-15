@@ -1,12 +1,11 @@
-namespace Fred.Abstractions.PublicFacing
+namespace Fred.Abstractions.PublicFacing;
+
+public interface IDatabaseConfiguration
 {
-    public interface IDatabaseConfiguration
-    {
-        public string ConnectionString { get; }
-    }    
-    
-    public interface IConfiguration
-    {
-        public IDatabaseConfiguration Database { get; }
-    }
+    public string ConnectionString { get; }
+}    
+
+public interface IConfiguration
+{
+    public IDatabaseConfiguration Database { get; }
 }

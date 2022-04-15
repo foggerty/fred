@@ -28,7 +28,7 @@
 //  - Everything is a request - request to PUT, DELETE, UPDATE etc., so make that an abstraction.
 //  - Still human readable, but WAY better suited to machines
 
-// "Let it crash" framework, similar to BEAM.
+// "Let it crash" framework, similar to BEAM - DeveloperExeptoin will ALWAYS kill the main process.
 
 // Put pipes behind interfaces, then start sending messages.
 

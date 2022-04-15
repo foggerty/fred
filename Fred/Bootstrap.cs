@@ -1,4 +1,3 @@
-using Fred.Abstractions.Internal;
 using Fred.Abstractions.PublicFacing;
 using Fred.Exceptions;
 using Fred.Implimentations.Internal;
@@ -19,23 +18,23 @@ public static class Bootstrap
             throw new DeveloperException($"You need to provide me with an IConfiguration instance.  Without configuration, what am I?");
         }
 
-        var locator = ServiceLocator();
+        var locator = ServiceLocator(configuration);
         var server = new Server(configuration, locator);
         
         return new ApiConfiguration(server, locator);
     }
 
-    private static IServiceLocatorSetup ServiceLocator()
+    private static IServiceLocatorSetup ServiceLocator(IConfiguration configuration)
     {
         var locator = new ServiceLocator();
         
-        RegistrerDefaultServices(locator);
+        RegistrerDefaultServices(locator, configuration);
 
         return locator;
     }
 
-    private static void RegistrerDefaultServices(IServiceLocatorSetup locator)
+    private static void RegistrerDefaultServices(IServiceLocatorSetup locator, IConfiguration configuration)
     {
-        locator.RegisterSingleton<IConfiguration, Configuration>();
+        locator.RegisterSingleton<IConfiguration>(_ => configuration);
     }
 }     

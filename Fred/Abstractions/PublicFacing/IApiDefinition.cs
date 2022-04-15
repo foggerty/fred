@@ -1,13 +1,12 @@
-namespace Fred.Abstractions.PublicFacing
+namespace Fred.Abstractions.PublicFacing;
+
+public interface IApiDefinition
 {
-    public interface IApiDefinition
-    {
-        public string Name { get; }
+    public string Name { get; }
 
-        public string Description { get; }
+    public string Description { get; }
 
-        public Version Version { get; }
+    public Version Version { get; }
 
-        public string Root { get; }
-    }
+    public string Root { get; }
 }

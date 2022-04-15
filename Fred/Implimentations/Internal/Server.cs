@@ -5,7 +5,7 @@ using Fred.Abstractions.PublicFacing.Services;
 
 namespace Fred.Implimentations.Internal;
 
-internal class Server : IServerConfiguration, IServer
+internal class Server : IServerConfiguration
 {
     private X509Certificate? _certificate;
 

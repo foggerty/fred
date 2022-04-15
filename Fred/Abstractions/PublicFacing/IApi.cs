@@ -1,11 +1,8 @@
-using System.Reflection.Metadata;
+namespace Fred.Abstractions.PublicFacing;
 
-namespace Fred.Abstractions.PublicFacing
+public interface IApi
 {
-    public interface IApi
-    {
-        public IApiDefinition Definition { get; }
+    public IApiDefinition Definition { get; }
 
-        public IEnumerable<IApiEndpoint> Endpoints { get; }
-    }
+    public IEnumerable<IApiEndpoint> Endpoints { get; }
 }

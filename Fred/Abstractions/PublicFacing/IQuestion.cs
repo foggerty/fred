@@ -1,9 +1,8 @@
-namespace Fred.Abstractions.PublicFacing
-{
-    public interface IQuestion<T>
-    {
-        int TicketNumber { get; set; }
+namespace Fred.Abstractions.PublicFacing;
 
-        T Request { get; set; }
-    }
+public interface IQuestion<T>
+{
+    int TicketNumber { get; set; }
+
+    T Request { get; set; }
 }

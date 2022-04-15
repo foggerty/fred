@@ -1,9 +1,8 @@
-namespace Fred.Abstractions.PublicFacing
-{
-    public interface IServer
-    {
-        void StartApis(TimeSpan timeout);
+namespace Fred.Abstractions.PublicFacing;
 
-        void StopApis(TimeSpan timeout);
-    }
+public interface IServer
+{
+    void StartApis(TimeSpan timeout);
+
+    void StopApis(TimeSpan timeout);
 }

@@ -51,6 +51,20 @@ internal class ServiceLocator : IServiceLocator, IServiceLocatorSetup
         throw new NotImplementedException();
     }
 
+    public void RegisterSingleton<I>(Func<IServiceLocator, I> create)
+    {
+        typeof(I).MustBeInterface();
+        
+        throw new NotImplementedException();
+    }
+
+    public void RegisterSingleton<I, API>(Func<IServiceLocator, I> create) where API : IApiDefinition
+    {
+        typeof(I).MustBeInterface();
+        
+        throw new NotImplementedException();
+    }
+
     public void RegisterTransient<I, T>()
     {
         typeof(I).MustBeInterface();
@@ -79,5 +93,5 @@ internal class ServiceLocator : IServiceLocator, IServiceLocatorSetup
         typeof(I).MustBeInterface();
         
         throw new NotImplementedException();
-    }
+    }   
 }

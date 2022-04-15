@@ -1,16 +1,15 @@
 using System.Net;
 
-namespace Fred.Abstractions.PublicFacing
-{
-    public interface IAnswer
-    {
-        HttpStatusCode StatusCode { get; }
+namespace Fred.Abstractions.PublicFacing;
 
-        internal string AsJSON();
-    }
-    
-    public interface IAnswer<T> : IAnswer
-    {
-        T Response { get; }        
-    }
+public interface IAnswer
+{
+    HttpStatusCode StatusCode { get; }
+
+    internal string AsJSON();
+}
+
+public interface IAnswer<T> : IAnswer
+{
+    T Response { get; }        
 }

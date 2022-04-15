@@ -1,14 +1,13 @@
 using System.Net;
 using Fred.Abstractions.PublicFacing;
-using Fred.Implimentations.PublicFacing;
+using Fred.Implimentations.Internal;
 
-namespace Fred.Functions
+namespace Fred.Functions;
+
+public static class AnswerFunctions
 {
-    public static class AnswerFunctions
+    public static IAnswer ToAnswer<T>(this T response, HttpStatusCode statusCode)
     {
-        public static IAnswer ToAnswer<T>(this T response, HttpStatusCode statusCode)
-        {
-            return new Answer<T>(response, statusCode);
-        }
+        return new Answer<T>(response, statusCode);
     }
 }
