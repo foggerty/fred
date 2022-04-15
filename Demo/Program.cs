@@ -3,11 +3,9 @@ using Demo.APIs.Wombat;
 using Demo.APIs.Weather;
 using Fred.Abstractions.PublicFacing;
 
-var config = Bootstrap.ReadConfiguration();  // or provide your own
-
 var server = Bootstrap
 
-    .NewServer(config)
+    .NewServer()
 
     .UseSelfSignedCertificate()
 
@@ -22,9 +20,12 @@ var server = Bootstrap
 server.StartApis(TimeSpan.FromSeconds(30));
 
 
-void ServicesSetup(IServiceLocatorSetup setup)
+void ServicesSetup(IServiceLocatorSetup setup, IConfiguration config)
 {
-    var fred = config.Database.ConnectionString;
+    var fred = config.Database?.ConnectionString;
+
+    if(fred == null)
+        return;
     
     setup.RegisterSingleton<string, string>(x => fred);
 }

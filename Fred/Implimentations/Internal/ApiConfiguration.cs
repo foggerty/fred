@@ -36,9 +36,11 @@ internal class ApiConfiguration : IApiConfiguration
 
     #region Configure dependency injection
     
-    public IApiConfiguration SetupServices(Action<IServiceLocatorSetup> setup)
+    public IApiConfiguration SetupServices(Action<IServiceLocatorSetup, IConfiguration> setup)
     {
-        setup(_serviceSetup);
+        var config = _serviceSetup.Get<IConfiguration>();
+        
+        setup(_serviceSetup, config);
 
         return this;
     }

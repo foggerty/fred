@@ -107,3 +107,7 @@
 // Every time that I find myself thinking "asp.net has this, so should Fred", STOP, and ask why
 // it has it in the first place.  Maybe it's like HttpContext - i.e. a leaky abstraction - in which
 // case, figure out WHY it's used, and therefore how it can map onto existing abstrations.
+
+// Really try to push home that "static = evil" just means that you don't know how to
+// use them properly.  i.e. as a way around the short-commings of traditional OO development
+// practices.
