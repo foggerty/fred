@@ -6,19 +6,38 @@ using Fred.Functions;
 
 namespace Fred.Implimentations.Internal;
 
+internal enum ServiceLifetime
+{
+    Transient,
+    Static
+}
+
+internal class Service
+{
+    internal Service(IApi? api, ServiceLifetime lifetime)
+    {
+        Api = api;
+        Lifetime = lifetime;
+    }   
+    
+    internal IApi? Api { get; }
+    internal ServiceLifetime Lifetime { get; }
+}
+
 internal class ServiceLocator : IServiceLocator, IServiceLocatorSetup
 {
-    private readonly ServiceContainer _singletonServices = new();
-    private readonly ServiceContainer _transientServices = new();
+    private readonly ServiceContainer _singletons = new();
     
-    public T Get<T>()
+    public I Get<I>()
     {
-        throw new NotImplementedException();
-    }
+        typeof(I).MustBeInterface();
+                
+        var service = _singletons.GetService(typeof(I));
 
-    public T Get<T, API>() where API : IApiDefinition
-    {
-        throw new NotImplementedException();
+        if(service == null)
+            throw new DeveloperException($"You asked for service '{typeof(I)}', but none was provided.");
+
+        return (I)service;
     }
 
     public void RegisterSingleton<I, T>()
@@ -36,29 +55,20 @@ internal class ServiceLocator : IServiceLocator, IServiceLocatorSetup
         throw new NotImplementedException();
     }
 
-    public void RegisterSingleton<I, T>(Func<IServiceLocator, T> create)
+    public void RegisterSingleton<I>(Func<I> create)
     {
         typeof(I).MustBeInterface();
         
-        throw new NotImplementedException();
+        var instance = create();
+
+        if(instance == null)
+            throw new DeveloperException("Come one now.  It's your own time that you're wasting.");
+
+        _singletons.AddService(typeof(I), instance);
     }
 
-    public void RegisterSingleton<I, T, API>(Func<IServiceLocator, T> create)
+    public void RegisterSingleton<I, API>(Func<I> create)
         where API : IApiDefinition
-    {
-        typeof(I).MustBeInterface();
-        
-        throw new NotImplementedException();
-    }
-
-    public void RegisterSingleton<I>(Func<IServiceLocator, I> create)
-    {
-        typeof(I).MustBeInterface();
-        
-        throw new NotImplementedException();
-    }
-
-    public void RegisterSingleton<I, API>(Func<IServiceLocator, I> create) where API : IApiDefinition
     {
         typeof(I).MustBeInterface();
         
@@ -80,18 +90,18 @@ internal class ServiceLocator : IServiceLocator, IServiceLocatorSetup
         throw new NotImplementedException();
     }
 
-    public void RegisterTransient<I, T>(Func<IServiceLocator, T> create)
+    public void RegisterTransient<I>(Func<I> create)
     {
         typeof(I).MustBeInterface();
         
         throw new NotImplementedException();
     }
 
-    public void RegisterTransient<I, T, API>(Func<IServiceLocator, T> create)
+    public void RegisterTransient<I, API>(Func<I> create)
         where API : IApiDefinition
     {
         typeof(I).MustBeInterface();
         
         throw new NotImplementedException();
-    }   
+    }
 }

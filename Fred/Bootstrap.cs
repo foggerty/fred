@@ -40,7 +40,7 @@ public static class Bootstrap
     private static void RegistrerDefaultServices(IServiceLocatorSetup locator, IConfiguration configuration)
     {
         // Gloally readable configuration, usually taken from "./fred.config"
-        locator.RegisterSingleton<IConfiguration>(_ => configuration);
+        locator.RegisterSingleton<IConfiguration>(() => configuration);
 
         // The remaining are serives that the server doesn't care about, but are "nice to
         // have" for the various endpoint-handlers.

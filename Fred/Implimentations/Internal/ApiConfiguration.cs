@@ -53,8 +53,8 @@ internal class ApiConfiguration : IApiConfiguration
     {
         //var cert =  new X509Certificate2();        
         //var store = new X509Store();
-        string storeName = "";
-        string thumbprint = "";
+        //string storeName = "";
+        //string thumbprint = "";
 
         //store.Open(OpenFlags.ReadWrite);
         //store.Add(cert);
@@ -63,11 +63,15 @@ internal class ApiConfiguration : IApiConfiguration
 
         //store.Close();
 
-        return UseCertificate(storeName, thumbprint);
+        //return UseCertificate(storeName, thumbprint);
+
+        return this;
     }
 
     public IApiConfiguration UseCertificate(string storeName, string thumbprint)
     {
+        // ToDo - check if store actually exists
+        
         var store = new X509Store(storeName);
         
         store.Open(OpenFlags.ReadOnly);

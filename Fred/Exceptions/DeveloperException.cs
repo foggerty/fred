@@ -13,7 +13,13 @@ public class DeveloperException : Exception
     // handlers with a certain timeout, and then kill the main 
     // process (humanely).
     
-    public DeveloperException(string? message) : base(message)
+    public DeveloperException(string? message)
+        : base(message)
+    {
+    }
+
+    public DeveloperException(string? message, Exception innerException)
+        : base(message, innerException)
     {
     }
 }

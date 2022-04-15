@@ -1,3 +1,4 @@
+using System.Net.Http.Headers;
 using Fred.Abstractions.PublicFacing;
 
 namespace Fred.Abstractions.Internal;
@@ -9,5 +10,5 @@ internal class DatabaseConfiguration : IDatabaseConfiguration
 
 internal class Configuration : IConfiguration
 {
-    public IDatabaseConfiguration? Database { get; internal set; }    
+    public IDatabaseConfiguration? Database { get; internal set; }
 }

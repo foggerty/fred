@@ -12,7 +12,7 @@ internal static class ConfigurationLoader
 
     internal static IConfiguration FromDefault()
     {
-        var pwd = Environment.CurrentDirectory;
+        var pwd = AppDomain.CurrentDomain.BaseDirectory;
         var path = Path.Combine(pwd, DEFAULT_CONFIG);
 
         if(File.Exists(path))
@@ -33,20 +33,21 @@ internal static class ConfigurationLoader
     {
         var asbytes = File.ReadAllBytes(path);
         var asString = Encoding.UTF8.GetString(asbytes);
+        Configuration? configuration;
 
         try
         {
-            var configuration = JsonSerializer.Deserialize<Configuration>(asString);
-
-            if(configuration == null)
-                throw new DeveloperException($"The configuration at {path} was not what it first seemed...");
-
-            return configuration;
+            configuration = JsonSerializer.Deserialize<Configuration>(asString);
         }
-        catch
+        catch(Exception ex)
         {
-            throw new DeveloperException($"There's something horribly, horrifyingly wrong with {path}");
-        }        
+            throw new DeveloperException("I am sorry to be the one to report this, but your configuration file is simply not up to scratch.", ex);
+        }
+
+        if(configuration == null)
+            throw new DeveloperException($"The configuration at {path} was not what it first seemed...");
+
+        return configuration;
     }
 
     private static IConfiguration DefaultConfig()
