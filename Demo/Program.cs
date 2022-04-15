@@ -27,5 +27,5 @@ void ServicesSetup(IServiceLocatorSetup setup, IConfiguration config)
     if(fred == null)
         return;
     
-    setup.RegisterSingleton<string, string>(x => fred);
+    setup.RegisterSingleton<string>(() => fred);
 }
