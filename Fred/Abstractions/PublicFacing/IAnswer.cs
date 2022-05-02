@@ -4,12 +4,14 @@ namespace Fred.Abstractions.PublicFacing;
 
 public interface IAnswer
 {
-    HttpStatusCode StatusCode { get; }
+    HttpStatusCode StatusCode { get; }    
 
-    internal string AsJSON();
+    public string AsJSON();
+
+    public Type ResponseType();
 }
 
 public interface IAnswer<T> : IAnswer
 {
-    T Response { get; }        
+    T Response { get; }    
 }

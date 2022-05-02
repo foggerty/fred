@@ -13,14 +13,17 @@ var server = Bootstrap
     .RegisterEndpoint<WombatApi, WombatEndpoint, string>()
     .RegisterEndpoint<WombatApi, WeatherEndpoint, int>()
 
-    .SetupServices(ServicesSetup)
+    .AddServices(ServicesSetup)
 
     .Done();
 
 server.StartApis(TimeSpan.FromSeconds(30));
 
 
-void ServicesSetup(IServiceLocatorSetup setup, IConfiguration config)
+
+
+
+void ServicesSetup(IServiceLocatorSetup setup, IConfig config)
 {
     var fred = config.Database?.ConnectionString;
 

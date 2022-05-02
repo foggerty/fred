@@ -1,14 +1,13 @@
-using System.Net.Http.Headers;
 using Fred.Abstractions.PublicFacing;
 
-namespace Fred.Abstractions.Internal;
+namespace Fred.Implimentations.Internal;
 
 internal class DatabaseConfiguration : IDatabaseConfiguration
 {
     public string ConnectionString => "";
 }
 
-internal class Configuration : IConfiguration
+internal class Config : IConfig
 {
     public IDatabaseConfiguration? Database { get; internal set; }
 }

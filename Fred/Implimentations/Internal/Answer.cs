@@ -4,7 +4,7 @@ using Fred.Abstractions.PublicFacing;
 
 namespace Fred.Implimentations.Internal;
 
-internal class Answer<T> : IAnswer
+internal class Answer<T> : IAnswer<T>
 {
     public Answer(T response, HttpStatusCode statusCode)
     {
@@ -19,5 +19,10 @@ internal class Answer<T> : IAnswer
     public string AsJSON()
     {
         return JsonSerializer.Serialize(Response);
+    }
+
+    public Type ResponseType()
+    {
+        return typeof(T);
     }
 }

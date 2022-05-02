@@ -6,7 +6,7 @@ namespace Fred.Functions;
 
 public static class AnswerFunctions
 {
-    public static IAnswer ToAnswer<T>(this T response, HttpStatusCode statusCode)
+    public static IAnswer<T> ToAnswer<T>(this T response, HttpStatusCode statusCode)
     {
         return new Answer<T>(response, statusCode);
     }

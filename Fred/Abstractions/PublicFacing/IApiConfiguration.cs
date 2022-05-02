@@ -10,7 +10,7 @@ public interface IApiConfiguration
 
     /* Configure dependency injection. */
     
-    public IApiConfiguration SetupServices(Action<IServiceLocatorSetup, IConfiguration> setup);
+    public IApiConfiguration AddServices(Action<IServiceLocatorSetup, IConfig> setup);
 
     /* Certificate setup */
 

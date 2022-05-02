@@ -11,4 +11,9 @@ public class WombatApi : IApiDefinition
     public Version Version => new(1, 0, 0, 0);
 
     public string Root => "wombats";
+
+    public Type? ConfigurationType()
+    {
+        return null;
+    }
 }

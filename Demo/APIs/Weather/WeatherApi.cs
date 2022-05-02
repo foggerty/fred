@@ -11,4 +11,9 @@ public class WeatherApi : IApiDefinition
     public Version Version => new(1, 0, 0, 0);
 
     public string Root => "weather";
+
+    public Type? ConfigurationType()
+    {
+        return typeof(WeatherConfig);
+    }
 }

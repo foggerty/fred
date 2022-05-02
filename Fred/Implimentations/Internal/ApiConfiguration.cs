@@ -5,17 +5,18 @@ using Fred.Abstractions.PublicFacing;
 using Fred.Abstractions.PublicFacing.Services;
 using Fred.Exceptions;
 using Fred.Functions;
+using Fred.Implimentations.Internal.Services;
 
 namespace Fred.Implimentations.Internal;
 
-internal class ApiConfiguration : IApiConfiguration
+internal class ApIServerSettings : IApiConfiguration
 {
     private bool _allowAccessToFileSystem;
     
     private readonly IServerConfiguration _server;
     private readonly IServiceLocatorSetup _serviceSetup;
 
-    internal ApiConfiguration(IServerConfiguration server, IServiceLocatorSetup locator)
+    internal ApIServerSettings(IServerConfiguration server, IServiceLocatorSetup locator)
     {
         _server = server;
         _serviceSetup = locator;
@@ -36,9 +37,9 @@ internal class ApiConfiguration : IApiConfiguration
 
     #region Configure dependency injection
     
-    public IApiConfiguration SetupServices(Action<IServiceLocatorSetup, IConfiguration> setup)
+    public IApiConfiguration AddServices(Action<IServiceLocatorSetup, IConfig> setup)
     {
-        var config = _serviceSetup.Get<IConfiguration>();
+        var config = _serviceSetup.Get<IConfig>();
         
         setup(_serviceSetup, config);
 
@@ -61,6 +62,8 @@ internal class ApiConfiguration : IApiConfiguration
 
         // write to store so can be exported - ToDo: add functionality to save to path and skip store.
 
+        // get thumbprint
+
         //store.Close();
 
         //return UseCertificate(storeName, thumbprint);
@@ -82,7 +85,7 @@ internal class ApiConfiguration : IApiConfiguration
 
         if(cert == null)
             throw new DeveloperException($"You asked me to supply you with a certificate with this thumbprint: {thumbprint}\n" +
-                                          "and from that store: {storeName}." +
+                                         $"and from that store: {storeName}." +
                                           "I could not find it.  Perhaps you misplaced it?");
 
         store.Close();

@@ -5,7 +5,7 @@ public interface IDatabaseConfiguration
     public string ConnectionString { get; }
 }
 
-public interface IConfiguration
+public interface IConfig
 {
     public IDatabaseConfiguration? Database { get; }
 }

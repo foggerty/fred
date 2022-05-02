@@ -1,3 +1,5 @@
+using System.Runtime.InteropServices;
+
 namespace Fred.Abstractions.PublicFacing;
 
 public interface IApiDefinition
@@ -9,4 +11,6 @@ public interface IApiDefinition
     public Version Version { get; }
 
     public string Root { get; }
+
+    public Type? ConfigurationType();
 }
