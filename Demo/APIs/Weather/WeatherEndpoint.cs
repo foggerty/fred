@@ -6,9 +6,18 @@ namespace Demo.APIs.Weather;
 
 public class WeatherEndpoint : IApiEndpointHandler<int>
 {
+    private readonly WeatherConfig _config;
+    
+    public WeatherEndpoint(WeatherConfig config)
+    {
+        _config = config;
+    }
+    
     public string Path => "dostuff";
 
     public Func<int, IAnswer> Handler => x =>
-        x.ToString().ToAnswer(HttpStatusCode.OK);  // point out that this is why, like all abstractions, this one leaks slightly.
+        (_config.MeasuremeantUnits * x)
+        .ToString()
+        .ToAnswer(HttpStatusCode.OK);
 }
 

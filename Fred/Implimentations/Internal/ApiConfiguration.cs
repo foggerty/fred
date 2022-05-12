@@ -9,14 +9,14 @@ using Fred.Implimentations.Internal.Services;
 
 namespace Fred.Implimentations.Internal;
 
-internal class ApIServerSettings : IApiConfiguration
+internal class ApiConfiguration : IApiConfiguration
 {
     private bool _allowAccessToFileSystem;
     
     private readonly IServerConfiguration _server;
     private readonly IServiceLocatorSetup _serviceSetup;
 
-    internal ApIServerSettings(IServerConfiguration server, IServiceLocatorSetup locator)
+    internal ApiConfiguration(IServerConfiguration server, IServiceLocatorSetup locator)
     {
         _server = server;
         _serviceSetup = locator;
@@ -25,8 +25,8 @@ internal class ApIServerSettings : IApiConfiguration
     #region Configure APIs and Endpoints
 
     public IApiConfiguration RegisterEndpoint<A, E, Q>()
-            where A : IApiDefinition, new()
-            where E : IApiEndpointHandler<Q>, new()
+            where A : IApiDefinition
+            where E : IApiEndpointHandler<Q>
     {
         _server.AddHandler<A, E, Q>();
         

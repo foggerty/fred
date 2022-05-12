@@ -22,13 +22,7 @@ server.StartApis(TimeSpan.FromSeconds(30));
 
 
 
-
 void ServicesSetup(IServiceLocatorSetup setup, IConfig config)
-{
-    var fred = config.Database?.ConnectionString;
-
-    if(fred == null)
-        return;
+{    
     
-    setup.RegisterSingleton<string>(() => fred);
 }

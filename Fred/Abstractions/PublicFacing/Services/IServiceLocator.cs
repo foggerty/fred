@@ -1,7 +1,12 @@
-namespace Fred.Abstractions.PublicFacing.Services;
+using Fred.Abstractions.PublicFacing;
 
-public partial interface IServiceLocator
+namespace Fred.Abstractions.Internal.Services;
+
+public interface IServiceLocator
 {
-    public T Get<T>();    
+    public I Get<I>();
+
+    public I Get<I, API>()
+        where API : IApiDefinition;
 }
 

@@ -5,8 +5,8 @@ public interface IApiConfiguration
     /* Configure APIs and Endpoints */
             
     public IApiConfiguration RegisterEndpoint<A, E, Q>()
-        where A : IApiDefinition, new()
-        where E : IApiEndpointHandler<Q>, new();
+        where A : IApiDefinition
+        where E : IApiEndpointHandler<Q>;
 
     /* Configure dependency injection. */
     

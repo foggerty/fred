@@ -1,11 +1,9 @@
 using System.Runtime.Serialization;
+using Fred.Abstractions.PublicFacing;
 
-namespace Demo.APIs.Weather
+namespace Demo.APIs.Weather;
+
+public class WeatherConfig : IApiConfig<WeatherApi>
 {
-    // Config is a type.....?
-    // It's a mutable type.  It does'n get an abstraction.
-    public class WeatherConfig
-    {
-        public int MeasuremeantUnits { get; set; }
-    }
+    public int MeasuremeantUnits { get; set; }
 }

@@ -1,11 +1,12 @@
-namespace Fred.Abstractions.PublicFacing;
+using Microsoft.AspNetCore.Components.Web;
 
-public interface IDatabaseConfiguration
-{
-    public string ConnectionString { get; }
-}
+namespace Fred.Abstractions.PublicFacing;
 
 public interface IConfig
 {
-    public IDatabaseConfiguration? Database { get; }
+    // There should be a class in the config collection that's keyed off of the 
+    public object ApiConfigFor<T>()
+        where T : IApiDefinition;
+    
+    public void ReadFromFile(string fileName);
 }

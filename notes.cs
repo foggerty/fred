@@ -1,4 +1,9 @@
-﻿// Everything should be composable.
+﻿// Go over design - will it still compose the same way if the 
+// transport layer is switched to sockets?  Does the http part
+// make assumptions about transport that sockets doesn't (easily)
+// support.
+
+// Everything should be composable.
 
 // Everything should be able to be encapsulated by something else and not be aware of it.
 
@@ -23,16 +28,27 @@
 //    them, so they tailor the API for their use.  The same people 
 //    make websites, which they do not consume, and yet they still
 //    tailor them for their "use".  That use being the making and 
-//    maintaining of the website.
+//    maintaining of said website.
 //  - But the code, my friend, THAT should be written for humans.  If it's too hard, make an abstraction to work with and repeat.
 //  - Everything is a request - request to PUT, DELETE, UPDATE etc., so make that an abstraction.
-//  - Still human readable, but WAY better suited to machines
+//  - Still human readable, but WAY better suited to machines AND generic code.
 
-// "Let it crash" framework, similar to BEAM - DeveloperExeptoin will ALWAYS kill the main process.
+// "Let it crash" framework, similar to BEAM - DeveloperException will ALWAYS kill the main process.
+
+// Each config entry must be a record.  Set defaults in the default constructor.
+// Can we constrain on record?
+
+// An endpoint can ask for API specific config in the constructor, and only what has been set up
+// as a 'default' for things like database access (only ever ask for repository, for instance).  There's
+// no reason that any endpoint should require access to the entire bloody configuration file.
+
+// standardise on allowed HTTP codes, so can abstract away into success/failure etc.
 
 // Put pipes behind interfaces, then start sending messages.
 
 // Can then scale across processes / machines.
+
+// Add a before/after filter/hook for things like HTTP headers?  
 
 // Can I use async/await with Task?  Can the thread-pool make use of it?
 

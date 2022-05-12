@@ -1,5 +1,3 @@
-using System.Text;
-using System.Text.Json;
 using Fred.Abstractions.PublicFacing;
 using Fred.Exceptions;
 using Fred.Implimentations.Internal;
@@ -18,7 +16,7 @@ internal static class LoadConfig
         if(File.Exists(path))
             return Load(path);
         
-        return DefaultConfig();
+        return new Config();
     }
     
     internal static IConfig FromFile(string? fileName)
@@ -31,27 +29,10 @@ internal static class LoadConfig
 
     private static IConfig Load(string path)
     {
-        var asbytes = File.ReadAllBytes(path);
-        var asString = Encoding.UTF8.GetString(asbytes);
-        Config? configuration;
+        var config = new Config();
 
-        try
-        {
-            configuration = JsonSerializer.Deserialize<Config>(asString);
-        }
-        catch(Exception ex)
-        {
-            throw new DeveloperException("I am sorry to be the one to report this, but your configuration file is simply not up to scratch.", ex);
-        }
+        config.ReadFromFile(path);
 
-        if(configuration == null)
-            throw new DeveloperException($"The configuration at {path} was not what I thought, but it was in fact...  The Abyss!");
-
-        return configuration;
-    }
-
-    private static IConfig DefaultConfig()
-    {
-        throw new Exception("Not sure if should allow this - should always insist on config?");
+        return config;
     }
 }

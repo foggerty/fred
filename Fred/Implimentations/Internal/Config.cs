@@ -2,12 +2,15 @@ using Fred.Abstractions.PublicFacing;
 
 namespace Fred.Implimentations.Internal;
 
-internal class DatabaseConfiguration : IDatabaseConfiguration
-{
-    public string ConnectionString => "";
-}
-
 internal class Config : IConfig
 {
-    public IDatabaseConfiguration? Database { get; internal set; }
+    public object ApiConfigFor<T>() where T : IApiDefinition
+    {
+        throw new NotImplementedException();
+    }
+
+    public void ReadFromFile(string fileName)
+    {
+        throw new NotImplementedException();
+    }
 }

@@ -1,10 +1,14 @@
-using System.Data;
-using Fred.Abstractions.PublicFacing.Services;
+using Fred.Abstractions.Internal.Services;
 
 namespace Fred.Abstractions.PublicFacing;
 
 public interface IServiceLocatorSetup : IServiceLocator
 {
+    public void RegisterSingleton<T>(T instance);
+
+    public void RegisterSingleton<T, API>(T instance)
+        where API : IApiDefinition;
+    
     public void RegisterSingleton<I, T>()
         where T : new();
 
@@ -12,13 +16,6 @@ public interface IServiceLocatorSetup : IServiceLocator
         where T : new()
         where API : IApiDefinition;
     
-    public void RegisterSingleton<I>(Func<I> create);
-    
-    public void RegisterSingleton<I, API>(Func<I> create)
-        where API : IApiDefinition;
-
-
-
     public void RegisterTransient<I, T>()
         where T : new();
 
@@ -26,8 +23,4 @@ public interface IServiceLocatorSetup : IServiceLocator
         where T : new()
         where API : IApiDefinition;
 
-    public void RegisterTransient<I>(Func<I> create);
-    
-    public void RegisterTransient<I, API>(Func<I> create)
-        where API : IApiDefinition;
 }
