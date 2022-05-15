@@ -1,6 +1,6 @@
 using System.Net;
 using Fred.Abstractions.PublicFacing;
-using Fred.Implimentations.Internal;
+using Fred.Implimentations;
 
 namespace Fred.Functions;
 

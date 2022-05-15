@@ -3,7 +3,7 @@ using Fred.Abstractions.Internal.Services;
 using Fred.Abstractions.PublicFacing;
 using Fred.Functions;
 
-namespace Fred.Implimentations.Internal.Services;
+namespace Fred.Implimentations.Services;
 
 internal enum ServiceLifetime
 {

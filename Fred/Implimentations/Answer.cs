@@ -2,7 +2,7 @@ using System.Net;
 using System.Text.Json;
 using Fred.Abstractions.PublicFacing;
 
-namespace Fred.Implimentations.Internal;
+namespace Fred.Implimentations;
 
 internal class Answer<T> : IAnswer<T>
 {

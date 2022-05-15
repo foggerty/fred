@@ -1,6 +1,6 @@
 using Fred.Abstractions.PublicFacing;
 
-namespace Fred.Implimentations.Internal;
+namespace Fred.Implimentations;
 
 internal class Config : IConfig
 {

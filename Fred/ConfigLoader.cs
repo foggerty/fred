@@ -1,6 +1,6 @@
 using Fred.Abstractions.PublicFacing;
 using Fred.Exceptions;
-using Fred.Implimentations.Internal;
+using Fred.Implimentations;
 
 namespace Fred;
 

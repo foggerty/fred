@@ -5,14 +5,14 @@ using Fred.Abstractions.PublicFacing;
 using Fred.Abstractions.PublicFacing.Services;
 using Fred.Exceptions;
 using Fred.Functions;
-using Fred.Implimentations.Internal.Services;
+using Fred.Implimentations.Services;
 
-namespace Fred.Implimentations.Internal;
+namespace Fred.Implimentations;
 
 internal class ApiConfiguration : IApiConfiguration
 {
     private bool _allowAccessToFileSystem;
-    
+
     private readonly IServerConfiguration _server;
     private readonly IServiceLocatorSetup _serviceSetup;
 
@@ -21,7 +21,7 @@ internal class ApiConfiguration : IApiConfiguration
         _server = server;
         _serviceSetup = locator;
     }
-    
+
     #region Configure APIs and Endpoints
 
     public IApiConfiguration RegisterEndpoint<A, E, Q>()
@@ -29,23 +29,23 @@ internal class ApiConfiguration : IApiConfiguration
             where E : IApiEndpointHandler<Q>
     {
         _server.AddHandler<A, E, Q>();
-        
+
         return this;
     }
 
     #endregion
 
     #region Configure dependency injection
-    
+
     public IApiConfiguration AddServices(Action<IServiceLocatorSetup, IConfig> setup)
     {
         var config = _serviceSetup.Get<IConfig>();
-        
+
         setup(_serviceSetup, config);
 
         return this;
     }
-    
+
     #endregion
 
     #region Certificate setup
@@ -74,16 +74,16 @@ internal class ApiConfiguration : IApiConfiguration
     public IApiConfiguration UseCertificate(string storeName, string thumbprint)
     {
         // ToDo - check if store actually exists
-        
+
         var store = new X509Store(storeName);
-        
+
         store.Open(OpenFlags.ReadOnly);
 
         var cert = store
             .Certificates
             .FirstOrDefault(c => c.Thumbprint.EqualsThumbprint(thumbprint));
 
-        if(cert == null)
+        if (cert == null)
             throw new DeveloperException($"You asked me to supply you with a certificate with this thumbprint: {thumbprint}\n" +
                                          $"and from that store: {storeName}." +
                                           "I could not find it.  Perhaps you misplaced it?");
@@ -91,12 +91,12 @@ internal class ApiConfiguration : IApiConfiguration
         store.Close();
 
         _server.UseHttpsCertificate(cert);
-        
+
         return this;
-    }    
+    }
 
     #endregion
-    
+
     #region Open up access to local resources
 
     public IApiConfiguration AllowAccessToFileSystem()
@@ -105,18 +105,18 @@ internal class ApiConfiguration : IApiConfiguration
 
         return this;
     }
-    
+
     #endregion
-    
+
     #region Finish configuration, spin up server and hand over control
 
     public IServer Done()
-    {        
-        if(_allowAccessToFileSystem)
+    {
+        if (_allowAccessToFileSystem)
             _serviceSetup.RegisterSingleton<IFileSystem, FileSystem>();
-        
+
         return _server;
-    }    
+    }
 
     #endregion
 }

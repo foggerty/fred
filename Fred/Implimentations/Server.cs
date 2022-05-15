@@ -3,15 +3,15 @@ using Fred.Abstractions.Internal;
 using Fred.Abstractions.Internal.Services;
 using Fred.Abstractions.PublicFacing;
 
-namespace Fred.Implimentations.Internal;
+namespace Fred.Implimentations;
 
 internal class Server : IServerConfiguration
-{    
+{
     private X509Certificate? _certificate;
-        
+
     private readonly IConfig _config;
     private readonly IServiceLocator _locator;
-    
+
     public Server(IConfig config, IServiceLocator locator)
     {
         _config = config;
@@ -19,14 +19,14 @@ internal class Server : IServerConfiguration
 
         // setup Kestrel       
     }
-    
+
     public IServerConfiguration AddHandler<A, E, Q>()
         where A : IApiDefinition
         where E : IApiEndpointHandler<Q>
     {
         // var apiDefinition = new A();
         // var endpoint = new E();        // get from DI
-        
+
         return this;
     }
 
@@ -36,15 +36,15 @@ internal class Server : IServerConfiguration
 
         return this;
     }
-    
+
     public void StartApis(TimeSpan timeout)
-    {        
-        
+    {
+
     }
 
     public void StopApis(TimeSpan timeout)
     {
-        
+
     }
 
     private RequestDelegate NewHandlerDelegate<Q>(IApiDefinition apiDefinition, IApiEndpointHandler<Q> handler)
@@ -54,8 +54,8 @@ internal class Server : IServerConfiguration
         // and returns a Func<T, IAnswer>.  That is what is then called here.
 
         // Look for an API wrapper.
-        
-        return async x => 
+
+        return async x =>
         {
             // Standard headers check
             // Security check
@@ -64,7 +64,7 @@ internal class Server : IServerConfiguration
             // questionHandler = wrapper ?? wrapper.Wrap(handler) : handler.Handler;
             // Get response from handler
             // Set response in context                       
-            
+
             await Task.CompletedTask;
         };
     }
