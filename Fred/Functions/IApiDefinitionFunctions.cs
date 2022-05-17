@@ -4,7 +4,7 @@ namespace Fred.Functions;
 
 public static class IApiDefinitionFunctions
 {
-    public static string PathTo(this IApiDefinition definition, IApiEndpoint endpoint)
+    public static string PathTo(this IApiDefinition definition, IApiEndpointHandler endpoint)
     {
         var root = new Uri(definition.Root);
         var path = new Uri(root, endpoint.Path);

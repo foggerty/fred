@@ -1,11 +1,11 @@
 namespace Fred.Abstractions.PublicFacing;
 
-public interface IApiEndpoint
+public interface IApiEndpointHandler
 {
     public string Path { get; }
 }
 
-public interface IApiEndpointHandler<Q> : IApiEndpoint
+public interface IApiEndpointHandler<Q> : IApiEndpointHandler
 {               
     public Func<Q, IAnswer> Handler { get; }
 }

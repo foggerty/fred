@@ -35,7 +35,7 @@ public static class Bootstrap
         
         // Add internal and default services that all APIs can use.
 
-        locator.RegisterSingleton<IConfig>(config);  // intrenal use
+        locator.RegisterSingleton<IConfig>(config);
 
         return locator;
     }

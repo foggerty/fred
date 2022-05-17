@@ -22,7 +22,7 @@ server.StartApis(TimeSpan.FromSeconds(30));
 
 
 
-void ServicesSetup(IServiceLocatorSetup setup, IConfig config)
+static void ServicesSetup(IServiceLocatorSetup setup, IConfig config)
 {    
     
 }

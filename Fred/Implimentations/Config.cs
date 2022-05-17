@@ -9,7 +9,7 @@ internal class Config : IConfig
         throw new NotImplementedException();
     }
 
-    public void ReadFromFile(string fileName)
+    internal void ReadFromFile(string fileName)
     {
         throw new NotImplementedException();
     }

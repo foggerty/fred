@@ -3,6 +3,11 @@
 // make assumptions about transport that sockets doesn't (easily)
 // support.
 
+// Static Debug class - thread safe, should only be able to be called when building 
+// in DEBUG.  RELEASE builds should throw a DeveloperException.  Actually, just have
+// the definition in DEBUG ifdef, and calls to it in Debug.......  Should be extensible 
+// via bootstrap code, so can write debug info to anything.
+
 // Everything should be composable.
 
 // Everything should be able to be encapsulated by something else and not be aware of it.
@@ -18,7 +23,7 @@
 // All is (sadly) JSON in the Http message's body:
 //  - predictable bloody endpoint names
 //  - consistency - always body, never a mix
-//  - allows for generic validation and mapping
+//  - allows for generic validation and mapping (optimise for both machine and coder)
 //  - this is an API, therefore we should be optimising for 
 //    machines.  Web sites should be optimised for people.
 //    Instead, we optimise APIs for people, and websites 
@@ -43,6 +48,7 @@
 // no reason that any endpoint should require access to the entire bloody configuration file.
 
 // standardise on allowed HTTP codes, so can abstract away into success/failure etc.
+// Always return 200, with return code a user-supplied enum?  Even required?
 
 // Put pipes behind interfaces, then start sending messages.
 

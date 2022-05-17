@@ -5,7 +5,7 @@ using Fred.Abstractions.PublicFacing;
 using Fred.Abstractions.PublicFacing.Services;
 using Fred.Exceptions;
 using Fred.Functions;
-using Fred.Implimentations.Services;
+using Fred.Implimentations.Services; 
 
 namespace Fred.Implimentations;
 

@@ -4,7 +4,7 @@ public class DeveloperException : Exception
 {
     // The badge of shame!
 
-    // If you get one of these, then somethihg wasn't setup
+    // If you get one of these, then something wasn't setup
     // correctly in the API framework, most likely at bootstrap
     // time.
 
