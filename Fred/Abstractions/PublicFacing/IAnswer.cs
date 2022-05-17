@@ -1,5 +1,3 @@
-using System.Net;
-
 namespace Fred.Abstractions.PublicFacing;
 
 public interface IAnswer

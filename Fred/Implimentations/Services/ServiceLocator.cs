@@ -11,7 +11,7 @@ internal enum ServiceLifetime
     Static
 }
 
-internal class ServiceLocator : IServiceLocator, IServiceLocatorSetup
+internal class ServiceLocator : IServiceLocatorSetup, IServiceLocator
 {    
     private readonly ServiceContainer _singletons = new();
     private readonly ServiceContainer _apiSingletons = new();
@@ -46,7 +46,7 @@ internal class ServiceLocator : IServiceLocator, IServiceLocatorSetup
     public void RegisterSingleton<I, API>(I instance)
         where API : IApiDefinition
     {
-        throw new NotImplementedException();
+        typeof(I).MustBeInterface();
     }
     
     public void RegisterSingleton<I, T>()

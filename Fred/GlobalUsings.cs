@@ -1,8 +1,8 @@
-using System;
-using System.Linq;
-using System.Net;
-using System.Runtime.Serialization;
+global using System;
+global using System.Linq;
+global using System.Net;
+global using System.Runtime.CompilerServices;
+global using System.Runtime.Serialization;
+global using System.Security.Cryptography.X509Certificates;
 
-using Fred;
-using Fred.Abstractions.Internal;
-using Fred.Abstractions.PublicFacing;
+[assembly:InternalsVisibleTo("Fred.Tests")]

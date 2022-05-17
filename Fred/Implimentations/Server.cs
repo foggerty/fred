@@ -9,12 +9,10 @@ internal class Server : IServerConfiguration
 {
     private X509Certificate? _certificate;
 
-    private readonly IConfig _config;
     private readonly IServiceLocator _locator;
 
-    public Server(IConfig config, IServiceLocator locator)
+    public Server(IServiceLocator locator)
     {
-        _config = config;
         _locator = locator;
 
         // setup Kestrel       

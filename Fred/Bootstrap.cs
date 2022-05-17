@@ -16,17 +16,17 @@ public static class Bootstrap
         return NewServer(config);        
     }
     
-    public static IApiConfiguration NewServer(IConfig configuration)
+    public static IApiConfiguration NewServer(IConfig config)
     {
-        if(configuration == null)
+        if(config == null)
         {                               
             throw new DeveloperException($"You need to provide me with an instance of {nameof(IConfig)}.  Without configuration, what am I?");
         }
 
-        var locator = NewServiceLocator(configuration);
-        var server = new Server(configuration, locator);
+        var locator = NewServiceLocator(config);
+        var server = new Server(locator);
         
-        return new ApiConfiguration(server, locator);
+        return new ApiConfiguration(server, locator, config);
     }
 
     internal static IServiceLocatorSetup NewServiceLocator(IConfig config)

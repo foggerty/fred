@@ -16,6 +16,8 @@
 
 // Closures closures everywhere.
 
+// Always test against interfaces, even if you only have a single implementation.
+
 // Only use libraries if they cut down on boiler-plate code (e.g. automapper).
 
 // static extensions methods that act against interfaces

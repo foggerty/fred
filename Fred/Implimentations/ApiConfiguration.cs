@@ -1,3 +1,4 @@
+using System.Collections.ObjectModel;
 using System.Security.Cryptography.X509Certificates;
 
 using Fred.Abstractions.Internal;
@@ -12,14 +13,19 @@ namespace Fred.Implimentations;
 internal class ApiConfiguration : IApiConfiguration
 {
     private bool _allowAccessToFileSystem;
-
+    
     private readonly IServerConfiguration _server;
     private readonly IServiceLocatorSetup _serviceSetup;
+    private readonly IConfig _config;
 
-    internal ApiConfiguration(IServerConfiguration server, IServiceLocatorSetup locator)
+    internal ApiConfiguration(
+        IServerConfiguration server,
+        IServiceLocatorSetup locator,
+        IConfig config)
     {
         _server = server;
         _serviceSetup = locator;
+        _config = config;
     }
 
     #region Configure APIs and Endpoints
@@ -39,9 +45,7 @@ internal class ApiConfiguration : IApiConfiguration
 
     public IApiConfiguration AddServices(Action<IServiceLocatorSetup, IConfig> setup)
     {
-        var config = _serviceSetup.Get<IConfig>();
-
-        setup(_serviceSetup, config);
+        setup(_serviceSetup, _config);
 
         return this;
     }
@@ -113,7 +117,7 @@ internal class ApiConfiguration : IApiConfiguration
     public IServer Done()
     {
         if (_allowAccessToFileSystem)
-            _serviceSetup.RegisterSingleton<IFileSystem, FileSystem>();
+            _serviceSetup.RegisterSingleton<ITemporaryFileSystem, TemporaryFileSystem>();
 
         return _server;
     }

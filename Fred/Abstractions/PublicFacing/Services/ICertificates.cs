@@ -1,5 +1,3 @@
-using System.Net.Http.Headers;
-
 namespace Fred.Abstractions.PublicFacing.Services;
 
 public interface ICertificates

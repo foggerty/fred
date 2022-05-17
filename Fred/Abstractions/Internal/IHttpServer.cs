@@ -1,5 +1,3 @@
-using Fred.Abstractions.PublicFacing;
-
 namespace Fred.Abstractions.Internal;
 
 public interface IHttpServer

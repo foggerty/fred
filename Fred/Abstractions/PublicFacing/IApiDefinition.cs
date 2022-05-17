@@ -1,5 +1,3 @@
-using System.Runtime.InteropServices;
-
 namespace Fred.Abstractions.PublicFacing;
 
 public interface IApiDefinition
