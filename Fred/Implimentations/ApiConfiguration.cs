@@ -117,7 +117,7 @@ internal class ApiConfiguration : IApiConfiguration
     public IServer Done()
     {
         if (_allowAccessToFileSystem)
-            _serviceSetup.RegisterSingleton<ITemporaryFileSystem, TemporaryFileSystem>();
+            _serviceSetup.RegisterSingleton<ITemporaryFileSystem>(new TemporaryFileSystem());
 
         return _server;
     }

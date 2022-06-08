@@ -1,36 +1,31 @@
-using System.ComponentModel.Design;
 using Fred.Abstractions.Internal.Services;
 using Fred.Abstractions.PublicFacing;
+using Fred.Exceptions;
 using Fred.Functions;
 
 namespace Fred.Implimentations.Services;
 
-internal enum ServiceLifetime
-{
-    Transient,
-    Static
-}
-
 internal class ServiceLocator : IServiceLocatorSetup, IServiceLocator
 {    
+    private readonly Dictionary<Type, Type> _toCreate = new();
     private readonly ServiceContainer _singletons = new();
-    private readonly ServiceContainer _apiSingletons = new();
+
+    private const string PleaseRegister = "Before you ask for '{0}', first register it.  Maybe you registered it for a specified API?";
+    private const string CannotRegisterANull = "Cannot register a null instance for interface '{0}' (or ANY interface, for that matter).  I mean, seriously...";
+    private const string DoNotRegisterTwice = "You've tried to register {0} twice.  Please refrain from doing so again.";
         
     public I Get<I>()
     {
-        typeof(I).MustBeInterface();                    
+        typeof(I).MustBeInterface();
         
-        var service = FromCache<I>() ?? Create<I>();
+        var service = FromSingletons<I>() ?? NewInstance<I>();
 
         if(service == null)
-            throw new Exception($"Service '{typeof(I)}' not found in _singletons.");
+        {
+            throw new DeveloperException(PleaseRegister, typeof(I));
+        }                              
 
         return (I)service;
-    }
-
-    public I Get<I, API>() where API : IApiDefinition
-    {
-        throw new NotImplementedException();
     }
 
     public void RegisterSingleton<I>(I instance)
@@ -38,62 +33,58 @@ internal class ServiceLocator : IServiceLocatorSetup, IServiceLocator
         typeof(I).MustBeInterface();
 
         if(instance == null)
-            throw new Exception($"Cannot register a null instance for interface '{nameof(I)}'");
+            throw new DeveloperException(CannotRegisterANull, nameof(I));
+
+        TestNotAlreadyRegistered<I>();
 
         _singletons.AddService(typeof(I), instance);
     }
 
-    public void RegisterSingleton<I, API>(I instance)
-        where API : IApiDefinition
+    public void RegisterSingleton<I, T>()
     {
         typeof(I).MustBeInterface();
+        typeof(T).MustImpliment(typeof(I));
+        typeof(T).MustHavePublicConstructor();
+
+        TestNotAlreadyRegistered<I>();
+        
+        _toCreate[typeof(I)] = typeof(T);
+    }
+
+    private void TestNotAlreadyRegistered<I>()
+    {
+        if(_singletons.GetService(typeof(I)) != null)
+            throw new DeveloperException(DoNotRegisterTwice, typeof(I));
+        
+        if(_toCreate.ContainsKey(typeof(I)))
+            throw new DeveloperException(DoNotRegisterTwice, nameof(I));
     }
     
-    public void RegisterSingleton<I, T>()
-        where T : new()
+    private I? FromSingletons<I>()
     {
-        typeof(I).MustBeInterface();
-        typeof(T).MustImpliment(typeof(I));
+        var result = _singletons.GetService(typeof(I));
 
-        // test if already registered
+        return result == null
+            ? default
+            : (I)result;
     }
 
-    public void RegisterSingleton<I, T, API>()
-        where T : new()
-        where API : IApiDefinition
+    private I? NewInstance<I>()
     {
-        typeof(I).MustBeInterface();
-        typeof(T).MustImpliment(typeof(T));
-
-        // test if already registered
-    }
-
-    public void RegisterTransient<I, T>()
-        where T : new()
-    {
-        typeof(I).MustBeInterface();
-        typeof(T).MustImpliment(typeof(I));
+        if(!_toCreate.ContainsKey(typeof(I)))
+            return default;
         
-        // test if already registered
-    }
+        var typeToCreate = _toCreate[typeof(I)];
 
-    public void RegisterTransient<I, T, API>()
-        where T : new()
-        where API : IApiDefinition
-    {
-        typeof(I).MustBeInterface();
-        typeof(T).MustImpliment(typeof(I));
-        
-        // test if already registered
-    }
+        var constructor = typeToCreate.GetConstructor(Array.Empty<Type>());
 
-    private T Create<T>()
-    {
-        throw new NotImplementedException();
-    }
+        if(constructor == null)
+            throw new DeveloperException("It's all gone horribly wrong, this exception shouldn't even be seen :-(");
 
-    private I FromCache<I>()
-    {
-        throw new NotImplementedException();
+        var instance = (I)constructor.Invoke(null);
+
+        _singletons.AddService(typeof(I), instance);
+
+        return instance;
     }
 }

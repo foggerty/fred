@@ -22,6 +22,9 @@
 
 // static extensions methods that act against interfaces
 
+// Re-red "Eight fallacys of distributed computing" - what can Fred do to help
+// people avoid, or not really applicable?
+
 // All is (sadly) JSON in the Http message's body:
 //  - predictable bloody endpoint names
 //  - consistency - always body, never a mix
@@ -106,11 +109,14 @@
 
 // Everything in bootstrap/configuration etc can be viewed as a function - the private vars
 // are like a let statement in lisp.  This analogy only works if they are ONLY used like
-// so: create -> set privates -> use privates to create a "result" value, throw away object.
+// so: create object -> set privates -> use privates to create a "result" value, throw away object.
 // For instance, if you assign the result of Done() like:
+//
 // var fred = new builder().DoStuffWithBuilder().Build();
-// then the builder (i.e. intermediate values) can be treated semantically as a function.  It's 
-// just a long-winded way of expressing one.
+//            |------------------------------------------|
+//
+// then the above can be considered a single function.  Change what DoStuffWithbuilder() does 
+// with its internal state and what you have is a different function; but it's still a function.  
 
 // RESTful API - let's focus on the API bit.  REST is just how we're doing something.  It's
 // nowhere near as important as WHY we're doing something.  In other words, HTTP should never even
@@ -135,3 +141,6 @@
 // Really try to push home that "static = evil" just means that you don't know how to
 // use them properly.  i.e. as a way around the short-commings of traditional OO development
 // practices.
+
+// Swap our JSON with msgPack at some point - do a video of writing a serializer?  So first
+// use standard library, then write own.  Benchmark the two.  
