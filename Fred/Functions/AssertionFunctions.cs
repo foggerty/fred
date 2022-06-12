@@ -7,7 +7,7 @@ internal static class AssertionFunctions
 {
     internal const string ThisDoesNoptImplimentThat = "{0} does not implement {1}.  Nor does it compliment it, or even give it the time of day.";
     internal const string NotAnInterface = "This needs to be an interface.  Not wants to be, needs to be.";
-    internal const string NoPublicConstructor = "There is no public or default constructor for type {0}, and yet you assured me that there was.  Why the deceit?";
+    internal const string NoPublicConstructor = "There is no public or default constructor for type {0}, and yet you assured me that there was.  Why the deceit?";    
    
     internal static void MustBeInterface(this Type t)
     {
@@ -23,11 +23,9 @@ internal static class AssertionFunctions
 
     internal static void MustHavePublicConstructor(this Type t)
     {
-        var hasEmptyConstructor = t.GetConstructor(Array.Empty<Type>()) != null;
-              
-        if(hasEmptyConstructor) // || hasPublicConstructor (where all paramaters are interfaces!)
+        if(t.HasEmptyConstructor() || t.HasSinglePublicConstructor())
             return;
 
         throw new DeveloperException(NoPublicConstructor, t.Name);
-    }
+    }    
 }

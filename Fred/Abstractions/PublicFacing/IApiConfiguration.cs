@@ -1,3 +1,5 @@
+using Fred.Abstractions.PublicFacing.Services;
+
 namespace Fred.Abstractions.PublicFacing;
 
 public interface IApiConfiguration
@@ -10,7 +12,7 @@ public interface IApiConfiguration
 
     /* Configure dependency injection. */
     
-    public IApiConfiguration AddServices(Action<IServiceLocatorSetup, IConfig> setup);
+    public IApiConfiguration AddServices(Action<IApiServicesSetup, IConfig> setup);
 
     /* Certificate setup */
 

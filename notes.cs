@@ -18,7 +18,8 @@
 
 // Always test against interfaces, even if you only have a single implementation.
 
-// Only use libraries if they cut down on boiler-plate code (e.g. automapper).
+// Only use libraries if they cut down on boiler-plate code (e.g. automapper) or do
+// something unique like image manipulations libraries.
 
 // static extensions methods that act against interfaces
 
@@ -53,13 +54,16 @@
 // no reason that any endpoint should require access to the entire bloody configuration file.
 
 // standardise on allowed HTTP codes, so can abstract away into success/failure etc.
-// Always return 200, with return code a user-supplied enum?  Even required?
+// Always return 200, with return code a user-supplied enum?  404 is a resource code, i.e. the HTTP resource
+// that you're trying to reach doesn't exist.  To extend it to 
 
 // Put pipes behind interfaces, then start sending messages.
 
 // Can then scale across processes / machines.
 
 // Add a before/after filter/hook for things like HTTP headers?  
+
+// For transient services, user must supply factory function.
 
 // Can I use async/await with Task?  Can the thread-pool make use of it?
 

@@ -2,6 +2,7 @@
 using Demo.APIs.Wombat;
 using Demo.APIs.Weather;
 using Fred.Abstractions.PublicFacing;
+using Fred.Abstractions.PublicFacing.Services;
 
 var server = Bootstrap
 
@@ -22,7 +23,7 @@ server.StartApis(TimeSpan.FromSeconds(30));
 
 
 
-static void ServicesSetup(IServiceLocatorSetup setup, IConfig config)
+static void ServicesSetup(IApiServicesSetup setup, IConfig config)
 {    
     
 }

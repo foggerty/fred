@@ -15,12 +15,12 @@ internal class ApiConfiguration : IApiConfiguration
     private bool _allowAccessToFileSystem;
     
     private readonly IServerConfiguration _server;
-    private readonly IServiceLocatorSetup _serviceSetup;
+    private readonly IApiServicesSetup _serviceSetup;
     private readonly IConfig _config;
 
     internal ApiConfiguration(
         IServerConfiguration server,
-        IServiceLocatorSetup locator,
+        IApiServicesSetup locator,
         IConfig config)
     {
         _server = server;
@@ -43,7 +43,7 @@ internal class ApiConfiguration : IApiConfiguration
 
     #region Configure dependency injection
 
-    public IApiConfiguration AddServices(Action<IServiceLocatorSetup, IConfig> setup)
+    public IApiConfiguration AddServices(Action<IApiServicesSetup, IConfig> setup)
     {
         setup(_serviceSetup, _config);
 

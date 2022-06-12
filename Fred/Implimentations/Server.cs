@@ -1,4 +1,3 @@
-using System.Security.Cryptography.X509Certificates;
 using Fred.Abstractions.Internal;
 using Fred.Abstractions.Internal.Services;
 using Fred.Abstractions.PublicFacing;
@@ -9,11 +8,11 @@ internal class Server : IServerConfiguration
 {
     private X509Certificate? _certificate;
 
-    private readonly IServiceLocator _locator;
+    private readonly IApiServices _services;
 
-    public Server(IServiceLocator locator)
+    public Server(IApiServices services)
     {
-        _locator = locator;
+        _services = services;
 
         // setup Kestrel       
     }
