@@ -4,9 +4,9 @@ namespace Fred.Abstractions.Internal;
 
 internal interface IServerConfiguration : IServer
 {
-    internal IServerConfiguration AddHandler<A, E, Q>()
+    internal void AddHandler<A, E, Q>()
             where A : IApiDefinition
             where E : IApiEndpointHandler<Q>;
 
-    internal IServerConfiguration UseHttpsCertificate(X509Certificate certificate);
+    internal void UseCertificate(X509Certificate certificate);
 }

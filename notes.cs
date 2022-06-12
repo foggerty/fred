@@ -70,6 +70,8 @@
 // By abstracting away the "how" - i.e. JSON and a fixed format, the logic
 // can actually focus on the logic.
 
+// Streaming - need another model to support this - side channel?
+
 // Treat HTTPS as the transport layer, i.e. create an abstraction that 
 // allows you to treat it as such, so you can start ignoring it.
 

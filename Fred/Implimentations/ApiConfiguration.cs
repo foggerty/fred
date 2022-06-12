@@ -28,8 +28,8 @@ internal class ApiConfiguration : IApiConfiguration
     #region Configure APIs and Endpoints
 
     public IApiConfiguration RegisterEndpoint<A, E, Q>()
-            where A : IApiDefinition
-            where E : IApiEndpointHandler<Q>
+        where A : IApiDefinition
+        where E : IApiEndpointHandler<Q>
     {
         _server.AddHandler<A, E, Q>();
 
@@ -85,13 +85,13 @@ internal class ApiConfiguration : IApiConfiguration
             .FirstOrDefault(c => c.Thumbprint.EqualsThumbprint(thumbprint));
 
         if (cert == null)
-            throw new DeveloperException($"You asked me to supply you with a certificate with this thumbprint: {thumbprint}\n" +
-                                         $"and from that store: {storeName}." +
-                                          "I could not find it.  Perhaps you misplaced it?");
+            throw new DeveloperException($"You asked me to supply you with a certificate having this thumbprint: {thumbprint}\n" +
+                                         $"that you assured me was in the store: {storeName}." +
+                                          "Sadly, I could not find it.  Perhaps you mislaid it?");
 
         store.Close();
 
-        _server.UseHttpsCertificate(cert);
+        _server.UseCertificate(cert);
 
         return this;
     }

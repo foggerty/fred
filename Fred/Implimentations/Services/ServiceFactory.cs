@@ -11,6 +11,7 @@ internal class ServiceFactory : IServiceFactory
 
     private const string CannotRegisterANull = "Cannot register a null instance for interface '{0}' (or ANY interface, for that matter).  I mean, seriously...";
     private const string DoNotRegisterTwice = "You've tried to register {0} twice.  Please refrain from doing so again.";
+    private const string YouNeverRegisteredThisForThat = "You never once - ONCE! - registered {0} so that it may be used when creating {1}.  You.  Monster.";
         
     public I? Get<I>()
     {
@@ -98,7 +99,8 @@ internal class ServiceFactory : IServiceFactory
         else
         {
             var parameters = constructor
-                .GetParameters();
+                .GetParameters()
+                .OrderBy(p => p.Position);
 
             var instances = new List<object>();
                         
@@ -107,7 +109,7 @@ internal class ServiceFactory : IServiceFactory
                 var parameterInstance = Get(parameter.ParameterType);
 
                 if(parameterInstance == null)
-                    throw new DeveloperException("");
+                    throw new DeveloperException(YouNeverRegisteredThisForThat, parameter.ParameterType.Name, i.Name);
 
                 instances.Add(parameterInstance);
             }

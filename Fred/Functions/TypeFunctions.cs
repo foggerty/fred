@@ -1,6 +1,4 @@
 using Fred.Exceptions;
-using Microsoft.AspNetCore.Server.IIS.Core;
-using Microsoft.AspNetCore.SignalR.Protocol;
 
 namespace Fred.Functions;
 
@@ -14,16 +12,16 @@ internal static class TypeFunctions
         return t.EmptyConstructor() != null;
     }
     
+    public static bool HasPublicConstructor(this Type t)
+    {
+        return t.PublicConstructor() != null;
+    }
+    
     public static ConstructorInfo? EmptyConstructor(this Type t)
     {
         var constructor = t.GetConstructor(Array.Empty<Type>());
 
         return constructor ?? null;
-    }
-
-    public static bool HasSinglePublicConstructor(this Type t)
-    {
-        return t.PublicConstructor() != null;
     }
 
     public static ConstructorInfo? PublicConstructor(this Type t)
@@ -60,5 +58,5 @@ internal static class TypeFunctions
             throw new DeveloperException(ReallyNeedSingleConstructor, t.Name);
         
         return emptyConstructor ?? publicConstructor;
-    }
+    }    
 }

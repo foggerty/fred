@@ -1,14 +1,20 @@
 using Fred.Abstractions.Internal;
 using Fred.Abstractions.Internal.Services;
 using Fred.Abstractions.PublicFacing;
+using Fred.Exceptions;
+using Fred.Functions;
 
 namespace Fred.Implimentations;
 
-internal class Server : IServerConfiguration
+internal class Server : IServerConfiguration, IServer
 {
     private X509Certificate? _certificate;
-
     private readonly IApiServices _services;
+    private readonly Dictionary<Type, IApiDefinition> _apis = new();
+
+    private const string WeRegretToInformYou = "We regret to inform you, but at the time of writing this Framework it's BLOODY TIME TO TURN ALL HTTP INTO HTTPS.  Ahem.  Excuse me.";
+    private const string TangledRoots = "You have defined more than one API that uses the root '{0}'.  While it's nice to share, please give each API definition a unique root.";
+    private const string SettingMoreThanOneCert = "You've already told me to use a certificate, asking me to use another just makes me nervous.  Are we being watched?";
 
     public Server(IApiServices services)
     {
@@ -17,26 +23,40 @@ internal class Server : IServerConfiguration
         // setup Kestrel       
     }
 
-    public IServerConfiguration AddHandler<A, E, Q>()
+    public void AddHandler<A, E, Q>()
         where A : IApiDefinition
         where E : IApiEndpointHandler<Q>
     {
-        // var apiDefinition = new A();
-        // var endpoint = new E();        // get from DI
+        AddApi<A>();
 
-        return this;
+        
+        // First:
+            // Setup Kestrel in seperate console app, link to simple action
+            // Add code to do so here
+            // Determine what the message format will be.
+            // Can then work out how to cleanly map from Kestrel request to one of Fred's handlers.
+
+        // Create a handler function that:
+            // gets endpoint via DI
+            // asks that endpoint a question
+        
+        // Add handler function to list of APIs.
+        
+        // Setup mapping in Kestrel from request to handler function.
     }
 
-    public IServerConfiguration UseHttpsCertificate(X509Certificate certificate)
+    public void UseCertificate(X509Certificate certificate)
     {
+        if(_certificate != null)
+            throw new DeveloperException(SettingMoreThanOneCert);
+        
         _certificate = certificate;
-
-        return this;
     }
 
     public void StartApis(TimeSpan timeout)
     {
-
+        if(_certificate == null)
+            throw new DeveloperException(WeRegretToInformYou);
     }
 
     public void StopApis(TimeSpan timeout)
@@ -44,25 +64,27 @@ internal class Server : IServerConfiguration
 
     }
 
-    private RequestDelegate NewHandlerDelegate<Q>(IApiDefinition apiDefinition, IApiEndpointHandler<Q> handler)
+    private void AddApi<A>()
+        where A : IApiDefinition
     {
-        // An ApiWrapper CANOT expose RequestDelegate, because leaky abstraction.
-        // An ApiWrapper should have a single function that takes an IApiEndpointHandler
-        // and returns a Func<T, IAnswer>.  That is what is then called here.
+        if(_apis.ContainsKey(typeof(A)))
+            return;
 
-        // Look for an API wrapper.
+        var constructor = typeof(A).EmptyConstructor();
 
-        return async x =>
-        {
-            // Standard headers check
-            // Security check
-            // Based on path, cast to Question type
-            // Get handler from DI - each time in case transient dependencies.
-            // questionHandler = wrapper ?? wrapper.Wrap(handler) : handler.Handler;
-            // Get response from handler
-            // Set response in context                       
+        if(constructor == null)
+            throw new DeveloperException("");
+        
+        var api = (IApiDefinition)constructor.Invoke(null);
 
-            await Task.CompletedTask;
-        };
+        _apis.Add(typeof(A), api);
+
+        var clashingRoot = _apis
+            .GroupBy(a => a.Value.Root)
+            .Where(g => g.Count() > 1)
+            .FirstOrDefault();
+        
+        if(clashingRoot != null)
+            throw new DeveloperException(TangledRoots);
     }
 }
