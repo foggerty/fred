@@ -79,14 +79,21 @@ internal class ServiceFactory : IServiceFactory
         return _singletons.GetService(i);
     }
 
-    private I NewInstance<I>()
+    private I? NewInstance<I>()
     {
-        return (I)NewInstance(typeof(I));
+        var instance = NewInstance(typeof(I));
+
+        return instance == null
+            ? default
+            : (I)instance;
     }
 
     // Yes, niave implementation for now, and will break with circular dependencies.
-    private object NewInstance(Type i)
+    private object? NewInstance(Type i)
     {       
+        if(!_toCreate.ContainsKey(i))
+            return default;
+        
         var typeToCreate = _toCreate[i];
 
         var constructor = typeToCreate?.DefaultConstructor();
