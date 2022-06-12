@@ -7,15 +7,18 @@ namespace Fred.Implimentations.Services;
 internal class ServiceFactory : IServiceFactory
 {    
     private readonly Dictionary<Type, Type> _toCreate = new();
-    private readonly ServiceContainer _singletons = new();
+    private readonly IServiceContainer _singletons = new ServiceContainer();
 
-    private const string PleaseRegister = "Before you ask for '{0}', first register it.";
     private const string CannotRegisterANull = "Cannot register a null instance for interface '{0}' (or ANY interface, for that matter).  I mean, seriously...";
     private const string DoNotRegisterTwice = "You've tried to register {0} twice.  Please refrain from doing so again.";
         
-    public I Get<I>()
+    public I? Get<I>()
     {
-        return (I)Get(typeof(I));
+        var instance = Get(typeof(I));
+
+        return instance == null
+            ? default
+            : (I)instance;
     }
     
     public void RegisterSingleton<I>(I instance)
@@ -41,16 +44,11 @@ internal class ServiceFactory : IServiceFactory
         _toCreate[typeof(I)] = typeof(T);
     }
 
-    private object Get(Type i)
+    private object? Get(Type i)
     {
         i.MustBeInterface();
 
-        var service = FromSingletons(i) ?? NewInstance(i);
-
-        if(service == null)
-        {
-            throw new DeveloperException(PleaseRegister, i.Name);
-        }                              
+        var service = FromSingletons(i) ?? NewInstance(i);        
 
         return service;
     }
@@ -64,15 +62,6 @@ internal class ServiceFactory : IServiceFactory
             throw new DeveloperException(DoNotRegisterTwice, nameof(I));
     }
     
-    private I? FromSingletons<I>()
-    {
-        var result = _singletons.GetService(typeof(I));
-
-        return result == null
-            ? default
-            : (I)result;
-    }
-
     private object? FromSingletons(Type i)
     {
         return _singletons.GetService(i);
@@ -115,7 +104,12 @@ internal class ServiceFactory : IServiceFactory
                         
             foreach(var parameter in parameters)
             {
-                instances.Add(Get(parameter.ParameterType));
+                var parameterInstance = Get(parameter.ParameterType);
+
+                if(parameterInstance == null)
+                    throw new DeveloperException("");
+
+                instances.Add(parameterInstance);
             }
 
             instance = constructor.Invoke(instances.ToArray());

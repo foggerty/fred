@@ -10,19 +10,32 @@ internal class ApiServices : IApiServices, IApiServicesSetup
     private readonly ServiceFactory _globalSingletons = new();
     private readonly Dictionary<Type, IServiceFactory> _apiSingletons = new();
 
-    private const string YouDidNotRegister = "You failed to register {0} for the api {1}.  'F.  For Failure.' - Steven He.";
-    
+    private const string YouDidNotRegister = "Why did you not register the type {0}?  WHY?!?";
+        
     public I Get<I>()
     {
-        return _globalSingletons.Get<I>();
+        var instance = _globalSingletons.Get<I>();
+
+        if(instance == null)
+            throw new DeveloperException(YouDidNotRegister, typeof(I).Name);
+
+        return instance;
     }
-
-    public I Get<I, A>() where A : IApiDefinition
+    
+    public I Get<I, A>()
+        where A : IApiDefinition
     {
-        if (!_apiSingletons.TryGetValue(typeof(A), out var serviceFactory))
-            throw new DeveloperException(YouDidNotRegister, typeof(I), typeof(A));
+        // Get API specific service if registered, otherwise will get global service.
+        
+        if (_apiSingletons.TryGetValue(typeof(A), out var serviceFactory))
+        {
+            var instance = serviceFactory.Get<I>();
 
-        return serviceFactory.Get<I>();
+            if(instance != null)
+                return instance;
+        }
+
+        return Get<I>();
     }
 
     public void RegisterSingleton<I>(I instance)
