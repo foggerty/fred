@@ -1,4 +1,3 @@
-using System.Net.Http.Headers;
 using Fred.Abstractions.Internal.Services;
 using Fred.Exceptions;
 using Fred.Functions;

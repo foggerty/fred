@@ -1,6 +1,3 @@
-using System.Collections.ObjectModel;
-using System.Security.Cryptography.X509Certificates;
-
 using Fred.Abstractions.Internal;
 using Fred.Abstractions.PublicFacing;
 using Fred.Abstractions.PublicFacing.Services;

@@ -1,5 +1,3 @@
-using System.Net;
-using System.Text.Json;
 using Fred.Abstractions.PublicFacing;
 
 namespace Fred.Implimentations;
