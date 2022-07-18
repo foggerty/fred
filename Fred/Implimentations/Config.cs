@@ -4,7 +4,8 @@ namespace Fred.Implimentations;
 
 internal class Config : IConfig
 {
-    public object ApiConfigFor<T>() where T : IApiDefinition
+    public object ApiConfigFor<I>()
+        where I : IApiDefinition
     {
         throw new NotImplementedException();
     }

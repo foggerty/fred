@@ -4,52 +4,28 @@ namespace Fred.Functions;
 
 internal static class TypeFunctions
 {
-    private const string NeedSingleConstructor = "{0} needs either a default (empty) constuctor or a single public constructor.  I get confused otherwise.  Sorry.";
-    private const string ReallyNeedSingleConstructor = "{0} needs EITHER a default (empty) constuctor OR a single public constructor.  I get confused otherwise.  Sorry.";
-
-    public static bool HasEmptyConstructor(this Type t)
-    {
-        return t.EmptyConstructor() != null;
-    }
-    
-    public static bool HasPublicConstructor(this Type t)
-    {
-        return t.PublicConstructor() != null;
-    }
+    private const string NeedSingleConstructor = "{0} needs either a default (empty) constuctor or a single public constructor to be used in Fred's DI container.  He gets confused otherwise.  Sorry.";
+    private const string ReallyNeedSingleConstructor = "{0} needs EITHER a default (empty) constuctor OR a single public constructor to be used in Fred's DI container.  He get confused otherwise.  Sorry.";
     
     public static ConstructorInfo? EmptyConstructor(this Type t)
     {
-        var constructor = t.GetConstructor(Array.Empty<Type>());
-
-        return constructor ?? null;
+        return t.GetConstructor(Array.Empty<Type>());
     }
 
-    public static ConstructorInfo? PublicConstructor(this Type t)
+    public static ConstructorInfo? NonEmptyConstructor(this Type t)
     {
-        var publicConstructors = t
+        return t
             .GetConstructors()
             .Where(c => c.IsPublic)
-            .Where(c => c.GetParameters()?.Length > 0);
-        
-        if(publicConstructors.Count() != 1)
-            return null;
-
-        var constructor = publicConstructors
-            .First();
-        
-        var allInterfaces = constructor
-            .GetParameters()
-            .All(p => p.ParameterType.IsInterface);        
-        
-        return allInterfaces
-            ? constructor 
-            : null;
+            .Where(c => c.GetParameters()?.Length > 0)
+            .Where(c => c.GetParameters().All(p => p.ParameterType.IsInterface))
+            .FirstOrDefault();        
     }
 
-    public static ConstructorInfo? DefaultConstructor(this Type t)
+    public static ConstructorInfo DefaultConstructorForDi(this Type t)
     {
         var emptyConstructor = t.EmptyConstructor();
-        var publicConstructor = t.PublicConstructor();
+        var publicConstructor = t.NonEmptyConstructor();
 
         if(emptyConstructor == null && publicConstructor == null)
             throw new DeveloperException(NeedSingleConstructor, t.Name);
@@ -57,6 +33,7 @@ internal static class TypeFunctions
         if(emptyConstructor != null && publicConstructor != null)
             throw new DeveloperException(ReallyNeedSingleConstructor, t.Name);
         
+        #pragma warning disable CS8603
         return emptyConstructor ?? publicConstructor;
-    }    
+    }
 }

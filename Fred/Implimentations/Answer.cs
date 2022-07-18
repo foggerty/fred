@@ -1,22 +1,27 @@
+using System.Text;
+using System.Diagnostics.CodeAnalysis;
 using Fred.Abstractions.PublicFacing;
 
 namespace Fred.Implimentations;
 
 internal class Answer<T> : IAnswer<T>
 {
-    public Answer(T response, HttpStatusCode statusCode)
+    public Answer(T response)
     {
         Response = response;
-        StatusCode = statusCode;
     }
 
     public T Response { get; }
 
-    public HttpStatusCode StatusCode { get; }
-
     public string AsJSON()
     {
-        return JsonSerializer.Serialize(Response);
+        var jso = new JsonSerializerOptions
+        {
+            AllowTrailingCommas = true,
+            WriteIndented = true,            
+        };
+        
+        return JsonSerializer.Serialize(Response, jso);
     }
 
     public Type ResponseType()

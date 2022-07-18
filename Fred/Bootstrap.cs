@@ -2,11 +2,15 @@ using Fred.Abstractions.Internal.Services;
 using Fred.Abstractions.PublicFacing;
 using Fred.Exceptions;
 using Fred.Implimentations;
+using Fred.Implimentations.Http;
 
 namespace Fred;
 
 public static class Bootstrap
 {
+    private const string INeedAnInstanceOf = "You need to provide me with an instance of {0}.  Without configuration, what am I?";
+    private const string HowOldIsYourOs = "Seriously, how old is this operating system?  I cannot work in these conduitions, simply horrendous.";
+
     public static IApiConfiguration NewServer(string? fileName = null)
     {
         var config = fileName == null
@@ -18,17 +22,19 @@ public static class Bootstrap
     
     public static IApiConfiguration NewServer(IConfig config)
     {
-        if(config == null)
-        {                               
-            throw new DeveloperException($"You need to provide me with an instance of {nameof(IConfig)}.  Without configuration, what am I?");
-        }
+        if(!HttpListener.IsSupported)
+            throw new DeveloperException(HowOldIsYourOs);
+        
+        if(config == null)                            
+            throw new DeveloperException(INeedAnInstanceOf, nameof(IConfig));
 
         var apiServices = new ApiServices();
         
         apiServices.RegisterSingleton<IConfig>(config);
-
-        var server = new Server(apiServices);
         
-        return new ApiConfiguration(server, apiServices, config);
+        return new ApiConfiguration(
+            new Server(apiServices), 
+            apiServices, 
+            config);
     }
 }

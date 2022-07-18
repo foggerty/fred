@@ -6,6 +6,8 @@ namespace Fred.Implimentations.Services;
 
 internal class ServiceFactory : IServiceFactory
 {    
+    private readonly object _lock = new();
+    
     private readonly Dictionary<Type, Type> _toCreate = new();
     private readonly IServiceContainer _singletons = new ServiceContainer();
 
@@ -15,11 +17,14 @@ internal class ServiceFactory : IServiceFactory
         
     public I? Get<I>()
     {
-        var instance = Get(typeof(I));
+        lock(_lock)
+        {
+            var instance = Get(typeof(I));
 
-        return instance == null
-            ? default
-            : (I)instance;
+            return instance == null
+                ? default
+                : (I)instance;
+        }
     }
     
     public void RegisterSingleton<I>(I instance)
@@ -29,29 +34,33 @@ internal class ServiceFactory : IServiceFactory
         if(instance == null)
             throw new DeveloperException(CannotRegisterANull, nameof(I));
 
-        TestNotAlreadyRegistered<I>();
+        lock(_lock)
+        {
+            TestNotAlreadyRegistered<I>();
 
-        _singletons.AddService(typeof(I), instance);
+            _singletons.AddService(typeof(I), instance);
+        }
     }
 
     public void RegisterSingleton<I, T>()
     {
         typeof(I).MustBeInterface();
         typeof(T).MustImpliment(typeof(I));
-        typeof(T).MustHavePublicConstructor();
+        typeof(T).MustHaveDiConstructor();
 
-        TestNotAlreadyRegistered<I>();
-        
-        _toCreate[typeof(I)] = typeof(T);
+        lock(_lock)
+        {
+            TestNotAlreadyRegistered<I>();
+            
+            _toCreate[typeof(I)] = typeof(T);
+        }
     }
 
     private object? Get(Type i)
     {
         i.MustBeInterface();
 
-        var service = FromSingletons(i) ?? NewInstance(i);        
-
-        return service;
+        return FromSingletons(i) ?? NewInstance(i);        
     }
     
     private void TestNotAlreadyRegistered<I>()
@@ -77,18 +86,13 @@ internal class ServiceFactory : IServiceFactory
             : (I)instance;
     }
 
-    // Yes, niave implementation for now, and will break with circular dependencies.
     private object? NewInstance(Type i)
     {       
         if(!_toCreate.ContainsKey(i))
             return default;
         
         var typeToCreate = _toCreate[i];
-
-        var constructor = typeToCreate?.DefaultConstructor();
-
-        if(constructor == null)
-            throw new DeveloperException("It's all gone horribly wrong, this exception shouldn't even be seen :-(");
+        var constructor = typeToCreate.DefaultConstructorForDi();
 
         object instance;
 
@@ -102,7 +106,7 @@ internal class ServiceFactory : IServiceFactory
                 .GetParameters()
                 .OrderBy(p => p.Position);
 
-            var instances = new List<object>();
+            var parameterInstances = new List<object>();
                         
             foreach(var parameter in parameters)
             {
@@ -111,10 +115,10 @@ internal class ServiceFactory : IServiceFactory
                 if(parameterInstance == null)
                     throw new DeveloperException(YouNeverRegisteredThisForThat, parameter.ParameterType.Name, i.Name);
 
-                instances.Add(parameterInstance);
+                parameterInstances.Add(parameterInstance);
             }
 
-            instance = constructor.Invoke(instances.ToArray());
+            instance = constructor.Invoke(parameterInstances.ToArray());
         }
 
         _singletons.AddService(i, instance);

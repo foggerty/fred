@@ -14,17 +14,17 @@ public interface IApiConfiguration
     
     public IApiConfiguration AddServices(Action<IApiServicesSetup, IConfig> setup);
 
-    /* Certificate setup */
+    /* Certificate setup. */
 
     public IApiConfiguration UseSelfSignedCertificate();
 
     public IApiConfiguration UseCertificate(string store, string thumbprint);
 
-    /* Access various local resources */
+    /* Access various local resources. */
 
     public IApiConfiguration AllowAccessToFileSystem();
 
     /* Finish configuration, spin up server and hand over control. */
     
-    public IServer Done();        
+    public IServerController Done();        
 }

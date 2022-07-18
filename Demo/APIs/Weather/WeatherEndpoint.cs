@@ -1,4 +1,3 @@
-using System.Net;
 using Fred.Abstractions.PublicFacing;
 using Fred.Functions;
 
@@ -18,6 +17,6 @@ public class WeatherEndpoint : IApiEndpointHandler<int>
     public Func<int, IAnswer> Handler => x =>
         (_config.MeasuremeantUnits * x)
         .ToString()
-        .ToAnswer(HttpStatusCode.OK);
+        .ToAnswer();
 }
 

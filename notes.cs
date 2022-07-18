@@ -16,6 +16,10 @@
 
 // Closures closures everywhere.
 
+// Make a point that instead of having config for all the little details, have a high-level
+// construct/abstraction like the BootStrap functions so can ignore them, but still allow
+// for low-level twiddling if you need it.  This is an important conceptual difference.
+
 // Always test against interfaces, even if you only have a single implementation.
 
 // Only use libraries if they cut down on boiler-plate code (e.g. automapper) or do
@@ -66,6 +70,9 @@
 // For transient services, user must supply factory function.
 
 // Can I use async/await with Task?  Can the thread-pool make use of it?
+
+// Challenge: if I want to use Fred to host a standard REST api, how easy is it?
+// Maybe just have it return a IHttpAnswer.....?  
 
 // By abstracting away the "how" - i.e. JSON and a fixed format, the logic
 // can actually focus on the logic.

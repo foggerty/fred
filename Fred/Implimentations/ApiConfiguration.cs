@@ -111,7 +111,7 @@ internal class ApiConfiguration : IApiConfiguration
 
     #region Finish configuration, spin up server and hand over control
 
-    public IServer Done()
+    public IServerController Done()
     {
         if (_allowAccessToFileSystem)
             _serviceSetup.RegisterSingleton<ITemporaryFileSystem>(new TemporaryFileSystem());

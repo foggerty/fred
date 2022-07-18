@@ -2,7 +2,7 @@ using Fred.Abstractions.PublicFacing;
 
 namespace Fred.Abstractions.Internal;
 
-internal interface IServerConfiguration : IServer
+internal interface IServerConfiguration : IServerController
 {
     internal void AddHandler<A, E, Q>()
             where A : IApiDefinition

@@ -1,4 +1,3 @@
-using System.Net;
 using Fred.Abstractions.PublicFacing;
 using Fred.Functions;
 
@@ -10,6 +9,6 @@ public class WombatEndpoint : IApiEndpointHandler<string>
 
     public Func<string, IAnswer> Handler => x =>
         int.Parse(x)
-        .ToAnswer(HttpStatusCode.OK);
+        .ToAnswer();
 }
 

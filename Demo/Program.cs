@@ -10,11 +10,11 @@ var server = Bootstrap
 
     .UseSelfSignedCertificate()
 
+    .AddServices(ServicesSetup)
+
     .RegisterEndpoint<WeatherApi, WeatherEndpoint, int>()
     .RegisterEndpoint<WombatApi, WombatEndpoint, string>()
-    .RegisterEndpoint<WombatApi, WeatherEndpoint, int>()
-
-    .AddServices(ServicesSetup)
+    .RegisterEndpoint<WombatApi, WeatherEndpoint, int>()    
 
     .Done();
 
@@ -24,6 +24,6 @@ server.StartApis(TimeSpan.FromSeconds(30));
 
 
 static void ServicesSetup(IApiServicesSetup setup, IConfig config)
-{    
-    
+{
+       
 }
