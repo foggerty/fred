@@ -1,5 +1,5 @@
 using Fred.Abstractions.PublicFacing;
-using Fred.Implimentations;
+using Fred.Implementations;
 
 namespace Fred.Functions;
 

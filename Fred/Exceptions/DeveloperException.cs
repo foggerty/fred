@@ -9,16 +9,16 @@ public class DeveloperException : Exception
 
     // Any time Fred gets one of these, he will (after sighing and
     // sadly shaking his head) attempt to shut down the remaining 
-    // handlers with a certain timeout, and then kill the main 
+    // handlers within a certain timeout, and then kill the main 
     // process (humanely).
-    
+
     public DeveloperException(string message)
         : base(message)
     {
     }
 
-    public DeveloperException(string message, params object[] paramters)
-        : base (string.Format(message, paramters))
+    public DeveloperException(string message, params object[] parameters)
+        : base(string.Format(message, parameters))
     {
     }
 

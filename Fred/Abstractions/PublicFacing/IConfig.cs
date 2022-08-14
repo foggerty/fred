@@ -1,8 +1,9 @@
+using Fred.Abstractions.PublicFacing.Services;
+
 namespace Fred.Abstractions.PublicFacing;
 
-public interface IConfig
+public interface IConfig : IFredService
 {
-    // There should be a class in the config collection that's keyed off of the 
-    public object ApiConfigFor<T>()
-        where T : IApiDefinition;
+    IApiConfig<A> ConfigFor<A>()
+        where A : IApiDefinition;
 }

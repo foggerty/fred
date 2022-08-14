@@ -1,12 +1,10 @@
-using Microsoft.AspNetCore.Mvc.ViewComponents;
-
 namespace Fred.Abstractions.PublicFacing.Services;
 
 // Use if you need to read/write the occasional file.
 // Question is, why would an endpoint handler do so?
 // A service might rely on the filesystem, but that's an implementation
 // detail that our endpoint handler should not know about.
-// The pattern should be than handlers comnsume services.
+// The pattern should be that handlers consume services.
 // A filesystem is not a service, it is an implementation detail
 // for a (say) ITemporaryFile service.
 
@@ -16,7 +14,7 @@ namespace Fred.Abstractions.PublicFacing.Services;
 // Maybe put in some code that checks if your handler requests a certain
 // services, and throws a DeveloperException if someone tries using it 
 // (or others).
-public interface ITemporaryFileSystem
+public interface ITemporaryFileSystem : IFredService
 {
     public bool IsAvailable();
 

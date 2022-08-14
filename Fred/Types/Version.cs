@@ -1,13 +1,12 @@
-namespace Fred.Types
+namespace Fred.Types;
+
+public struct Version
 {
-    public struct Version
-    {
-        public int Major { get; }
+    public int Major { get; }
 
-        public int Minor { get; }
+    public int Minor { get; }
 
-        public int Revision { get; }
+    public int Revision { get; }
 
-        public int Build { get; }
-    }
+    public int Build { get; }
 }

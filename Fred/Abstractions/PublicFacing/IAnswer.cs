@@ -9,5 +9,5 @@ public interface IAnswer
 
 public interface IAnswer<T> : IAnswer
 {
-    T Response { get; }    
+    T Response { get; }
 }

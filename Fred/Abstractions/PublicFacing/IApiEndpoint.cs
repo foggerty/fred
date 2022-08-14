@@ -6,6 +6,6 @@ public interface IApiEndpointHandler
 }
 
 public interface IApiEndpointHandler<Q> : IApiEndpointHandler
-{               
+{
     public Func<Q, IAnswer> Handler { get; }
 }

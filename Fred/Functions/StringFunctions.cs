@@ -10,9 +10,9 @@ public static class StringFunctions
     private static string Tidy(string thumbprint)
     {
         return thumbprint
-            .Trim()
-            .Replace(" ", "")
-            .Replace("-", "")
-            .ToUpper(CultureInfo.CurrentCulture);
+               .Trim()
+               .Replace(" ", "")
+               .Replace("-", "")
+               .ToUpper(CultureInfo.CurrentCulture);
     }
 }

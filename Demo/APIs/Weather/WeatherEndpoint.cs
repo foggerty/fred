@@ -12,11 +12,9 @@ public class WeatherEndpoint : IApiEndpointHandler<int>
         _config = config;
     }
     
-    public string Path => "dostuff";
+    public string Path => "doStuff";
 
     public Func<int, IAnswer> Handler => x =>
-        (_config.MeasuremeantUnits * x)
-        .ToString()
-        .ToAnswer();
+        $"{x.ToString()} -  {_config.Units}"
+         .ToAnswer();
 }
-

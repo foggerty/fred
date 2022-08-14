@@ -1,6 +1,6 @@
 using Fred.Abstractions.PublicFacing.Services;
 
-namespace Fred.Implimentations.Services;
+namespace Fred.Implementations.Services;
 
 internal class TemporaryFileSystem : ITemporaryFileSystem
 {

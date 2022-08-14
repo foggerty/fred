@@ -2,7 +2,7 @@ using Fred.Abstractions.PublicFacing;
 
 namespace Demo.APIs.Wombat;
 
-public class WombatApi : IApiDefinition
+public record WombatApi : IApiDefinition
 {
     public string Name => "Wombat API";
 
@@ -11,9 +11,4 @@ public class WombatApi : IApiDefinition
     public Version Version => new(1, 0, 0, 0);
 
     public string Root => "wombats";
-
-    public Type? ConfigurationType()
-    {
-        return null;
-    }
 }

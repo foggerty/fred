@@ -1,8 +1,6 @@
-using System.Text;
-using System.Diagnostics.CodeAnalysis;
 using Fred.Abstractions.PublicFacing;
 
-namespace Fred.Implimentations;
+namespace Fred.Implementations;
 
 internal class Answer<T> : IAnswer<T>
 {
@@ -18,9 +16,9 @@ internal class Answer<T> : IAnswer<T>
         var jso = new JsonSerializerOptions
         {
             AllowTrailingCommas = true,
-            WriteIndented = true,            
+            WriteIndented       = true
         };
-        
+
         return JsonSerializer.Serialize(Response, jso);
     }
 

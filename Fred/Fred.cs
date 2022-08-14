@@ -1,6 +1,6 @@
-namespace Fred.Functions;
+namespace Fred;
 
-public static class EnvironmentFunctions
+public static class Fred
 {
     public static Func<string> HostName = () => "localhost";
 

@@ -1,7 +1,11 @@
-namespace Fred.Implimentations.Http;
+namespace Fred.Implementations.Http;
 
-sealed class NoOpLogger : ILogger, IDisposable
+public class NoOpLogger : ILogger, IDisposable
 {
+    public void Dispose()
+    {
+    }
+
     public IDisposable BeginScope<TState>(TState state)
     {
         return this;
@@ -12,16 +16,13 @@ sealed class NoOpLogger : ILogger, IDisposable
         return false;
     }
 
-    public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
-    {
-    }
-
-    public void Dispose()
+    public void Log<TState>(LogLevel    logLevel, EventId eventId, TState state, Exception exception,
+        Func<TState, Exception, string> formatter)
     {
     }
 }
 
-sealed class NoOpLoggerFactory : ILoggerFactory
+public class NoOpLoggerFactory : ILoggerFactory
 {
     private readonly ILogger logger = new NoOpLogger();
 
@@ -35,6 +36,6 @@ sealed class NoOpLoggerFactory : ILoggerFactory
 
     public ILogger CreateLogger(string categoryName)
     {
-        return this.logger;
+        return logger;
     }
 }

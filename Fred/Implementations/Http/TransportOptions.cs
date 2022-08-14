@@ -1,12 +1,10 @@
-namespace Fred.Implimentations.Http;
+namespace Fred.Implementations.Http;
 
 public sealed class ConfigureSocketTransportOptions : IOptions<SocketTransportOptions>
 {
     public ConfigureSocketTransportOptions()
     {
-        this.Value = new SocketTransportOptions()
-        {
-        };
+        Value = new SocketTransportOptions();
     }
 
     public SocketTransportOptions Value { get; }
