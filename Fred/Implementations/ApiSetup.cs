@@ -30,7 +30,7 @@ internal class ApiSetup : IApiSetup
         throw new NotImplementedException();
     }
 
-    public IApiSetup RegisterEndpoint<A, E, Q>()
+    public IApiSetup AddHandler<A, E, Q>()
         where A : IApiDefinition
         where E : IApiEndpointHandler<Q>
     {
@@ -43,7 +43,7 @@ internal class ApiSetup : IApiSetup
 
     #region Configure dependency injection
 
-    public IApiSetup AddServices(Action<IServicesSetup> setup)
+    public IApiSetup ConfigureServices(Action<IServicesSetup> setup)
     {
         setup(_servicesSetup);
 

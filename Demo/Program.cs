@@ -4,21 +4,6 @@ using Demo.Services;
 using Fred;
 using Fred.Abstractions.PublicFacing.Services;
 
-var config = LoadConfig.FromDefault();
-
-var server = Bootstrap
-             .NewServer(config)
-             .UseSelfSignedCertificate()
-             .RegisterConfig<WeatherApi, WeatherConfig>()
-             .RegisterEndpoint<WeatherApi, WeatherEndpoint, int>()
-             .RegisterEndpoint<WombatApi, WombatEndpoint, string>()
-             .RegisterEndpoint<WombatApi, WeatherEndpoint, int>()
-             .AddServices(ServicesSetup)
-             .Done();
-
-server.StartApis(TimeSpan.FromSeconds(30));
-
-
 static void ServicesSetup(IServicesSetup setup)
 {
     var weatherConfig = setup.Get<WeatherConfig>();
@@ -27,3 +12,18 @@ static void ServicesSetup(IServicesSetup setup)
     
     setup.RegisterSingleton(() => new WunderService());
 }
+
+var config = LoadConfig.FromDefault();
+
+var server = Bootstrap
+    .NewServer(config)
+    .UseSelfSignedCertificate()
+    .RegisterConfig<WeatherApi, WeatherConfig>()
+    .AddHandler<WeatherApi, WeatherEndpoint, int>()
+    .AddHandler<WombatApi, WombatEndpoint, string>()
+    .AddHandler<WombatApi, WeatherEndpoint, int>()
+    .AllowAccessToFileSystem()
+    .ConfigureServices(ServicesSetup)
+    .Done();
+
+server.StartApis(TimeSpan.FromSeconds(30));

@@ -4,6 +4,12 @@ namespace Fred.Implementations;
 
 internal class Answer<T> : IAnswer<T>
 {
+    private static readonly JsonSerializerOptions _jso = new JsonSerializerOptions
+    {
+        AllowTrailingCommas = true,
+        WriteIndented       = true
+    };
+    
     public Answer(T response)
     {
         Response = response;
@@ -13,13 +19,7 @@ internal class Answer<T> : IAnswer<T>
 
     public string AsJSON()
     {
-        var jso = new JsonSerializerOptions
-        {
-            AllowTrailingCommas = true,
-            WriteIndented       = true
-        };
-
-        return JsonSerializer.Serialize(Response, jso);
+        return JsonSerializer.Serialize(Response, _jso);
     }
 
     public Type ResponseType()

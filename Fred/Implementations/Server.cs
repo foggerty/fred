@@ -7,13 +7,14 @@ using Fred.Functions;
 
 namespace Fred.Implementations;
 
-internal class Server : IServerConfiguration, IServerController
+internal class Server : IServerConfiguration
 {
     private const string WeRegretToInformYou =
-        "We regret to inform you, but at the time of writing this Framework that it's BLOODY TIME TO TURN ALL OF THE HTTP INTO SODDING HTTPS.  Ahem.";
+        "We regret to inform you, but at the time of writing this Framework that it's BLOODY TIME TO TURN ALL OF THE HTTP INTO SODDING HTTPS.";
 
     private const string TangledRoots =
-        "You have defined more than one API that uses the root '{0}'.  While it's nice to share, we ask that you refrain from doing so in this particular instace, and to instead give each API definition a unique root.";
+        "You have defined more than one API that uses the root '{0}'.  While it's nice to share, " +
+        "we ask that you refrain from doing so in this particular instace, and to instead give each API definition a unique root.";
 
     private const string SettingMoreThanOneCert =
         "You've already told me to use a certificate, asking me to use another just makes me nervous.  Are we being watched?";
@@ -66,9 +67,8 @@ internal class Server : IServerConfiguration, IServerController
         throw new NotImplementedException();
     }
 
-    private void AddEndpoint<A, E, Q>()
+    private void AddApi<A>()
         where A : IApiDefinition
-        where E : IApiEndpointHandler<Q>
     {
         if (_apis.ContainsKey(typeof(A)))
             return;
@@ -81,7 +81,14 @@ internal class Server : IServerConfiguration, IServerController
         var api = (IApiDefinition)constructor.Invoke(null);
 
         _apis.Add(typeof(A), api);
-
+    }
+    
+    private void AddEndpoint<A, E, Q>()
+        where A : IApiDefinition
+        where E : IApiEndpointHandler<Q>
+    {
+        AddApi<A>();
+        
         var clashingRoot = _apis
                            .GroupBy(a => a.Value.Root)
                            .Where(g => g.Count() > 1)
@@ -89,7 +96,5 @@ internal class Server : IServerConfiguration, IServerController
 
         if (clashingRoot != null)
             throw new DeveloperException(TangledRoots);
-
-        
     }
 }

@@ -4,4 +4,8 @@ public interface IFredService
 {
     // All user-supplied services must implement this interface before
     // Fred will even consider using them.
+    
+    /* Rationale:
+        
+     */
 }

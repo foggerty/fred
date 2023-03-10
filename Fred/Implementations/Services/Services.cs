@@ -1,11 +1,10 @@
 using Fred.Abstractions.Internal.Services;
 using Fred.Abstractions.PublicFacing;
 using Fred.Abstractions.PublicFacing.Services;
-using Fred.Exceptions;
 
 namespace Fred.Implementations.Services;
 
-internal class Services : IServices, IServicesSetup
+internal class Services : IServicesSetup
 {
     private readonly Dictionary<Type, IServiceFactory> _apiSingletons = new();
     private readonly ServiceFactory _globalSingletons = new();
@@ -33,6 +32,7 @@ internal class Services : IServices, IServicesSetup
 
     public void RegisterSingleton<I, T>()
         where I : IFredService
+        where T : IFredService
     {
         _globalSingletons.RegisterSingleton<I, T>();
     }
@@ -54,6 +54,7 @@ internal class Services : IServices, IServicesSetup
 
     public void RegisterSingleton<I, T, A>()
         where I : IFredService
+        where T : IFredService
         where A : IApiDefinition
     {
         var serviceFactory = FactoryFor<A>();

@@ -13,29 +13,41 @@ public class ServicesTests
     [TestMethod]
     public void RegistrationMistakes()
     {
-        // Can only register interfaces globally.
-        BadRegistrationThrowsDeveloperException(x => x.RegisterSingleton<TestImplementation>(new TestImplementation()));
+        // Can only register interfaces.
+        BadRegistrationThrowsDeveloperException(x => 
+            x.RegisterSingleton<TestImplementation>(new TestImplementation()));
 
-        // Can only register interface/implementation pair globally.
-        BadRegistrationThrowsDeveloperException(x => x.RegisterSingleton<ITestInterface, WrongImplementation>());
+        // Can only register a matching interface/implementation pair.
+        BadRegistrationThrowsDeveloperException(x => 
+            x.RegisterSingleton<ITestInterface, WrongImplementation>());
 
-        // Can only register interfaces for an API.        
+        // Can only register services against an API's interface (not its type).
         BadRegistrationThrowsDeveloperException(x =>
-            x.RegisterSingleton<TestImplementation, AnApiDefinition>(new TestImplementation()));
+            x.RegisterSingleton<ITestInterface, AnApiDefinition>(new TestImplementation()));
 
-        // Can only register interface/implementation pair for an API.
+        // Can only register a matching interface/implementation pair for a given API.
         BadRegistrationThrowsDeveloperException(x =>
-            x.RegisterSingleton<ITestInterface, WrongImplementation, AnApiDefinition>());
+            x.RegisterSingleton<ITestInterface, WrongImplementation, IApiDefinition>());
 
         // Can only register an implementation that has a valid constructor.
-        BadRegistrationThrowsDeveloperException(x => x.RegisterSingleton<IBadConstructor, BadConstructor>());
+        BadRegistrationThrowsDeveloperException(x => 
+            x.RegisterSingleton<IBadConstructor, BadConstructor>());
 
-        // Can only register an implementations that has a valid constructor for an API.
+        // Can only register an implementations for a given API that has a valid constructor.
         BadRegistrationThrowsDeveloperException(x =>
-            x.RegisterSingleton<IBadConstructor, BadConstructor, AnApiDefinition>());
+            x.RegisterSingleton<IBadConstructor, BadConstructor, IApiDefinition>());
 
         // Can only register implementations if they have constructors we can use.
-        BadRegistrationThrowsDeveloperException(x => x.RegisterSingleton<IBadConstructor, BadConstructor>());
+        BadRegistrationThrowsDeveloperException(x => 
+            x.RegisterSingleton<IBadConstructor, BadConstructor>());
+        
+        // Can only register implementations got a given API if they have constructors we can use.
+        BadRegistrationThrowsDeveloperException(x => 
+            x.RegisterSingleton<IBadConstructor, BadConstructor, IApiDefinition>());
+        
+        // Can only register service and factory agaist an API's interface (not its type).
+        BadRegistrationThrowsDeveloperException(x => 
+            x.RegisterSingleton<ITestInterface, AnApiDefinition>(() => new TestImplementation()));
     }
 
     [TestMethod]

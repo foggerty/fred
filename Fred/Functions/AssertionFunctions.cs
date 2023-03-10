@@ -28,7 +28,7 @@ internal static class AssertionFunctions
         throw new DeveloperException(ThisDoesNotImplementThat, t.Name, i.Name);
     }
 
-    public static void MustHaveDiConstructor(this Type t)
+    public static void MustHaveDIFriendlyConstructor(this Type t)
     {
         // The following will throw an exception if there is no appropriate constructor to use with Fred's
         // DI container.

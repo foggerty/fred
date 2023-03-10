@@ -13,22 +13,19 @@ internal class ServiceFactory : IServiceFactory
     private const string YouNeverRegistered = "You have never registered or indicated in any manner how I might procure a {0}, and yet you now ask me for one?  For shame.";
     private const string YouBrokeEverything = "All I asked you to do, was to provide me with a factory function to create a {0} as needed that DIDN'T EXPLODE when I called it.";
     
-    private readonly object _lock = new();
+    private readonly object _lock = new(); // ToDo - Rethink the locking strategy when sober.  Ahem.
     private readonly IServiceContainer _singletons = new ServiceContainer();
     private readonly Dictionary<Type, Func<object>> _toCreate = new();
 
     public I Get<I>()
         where I : IFredService
     {
-        lock (_lock)
-        {
-            var instance = Get(typeof(I));
+        var instance = Get(typeof(I));
 
-            if (instance == null)
-                throw new DeveloperException(YouNeverRegistered, typeof(I).Name);
+        if (instance == null)
+            throw new DeveloperException(YouNeverRegistered, typeof(I).Name);
 
-            return (I)instance;
-        }
+        return (I)instance;
     }
 
     public void RegisterSingleton<I>(I instance)
@@ -40,12 +37,9 @@ internal class ServiceFactory : IServiceFactory
         if (instance == null)
             throw new DeveloperException(CannotRegisterANull, nameof(I));
 
-        lock (_lock)
-        {
-            TestNotAlreadyRegistered<I>();
+        TestNotAlreadyRegistered<I>();
 
-            _singletons.AddService(typeof(I), instance);
-        }
+        _singletons.AddService(typeof(I), instance);
     }
 
     public void RegisterSingleton<I, T>()
@@ -54,14 +48,11 @@ internal class ServiceFactory : IServiceFactory
         typeof(I).MustBeInterface();
         typeof(I).MustBeAllowedService();
         typeof(T).MustImplement(typeof(I));
-        typeof(T).MustHaveDiConstructor();
+        typeof(T).MustHaveDIFriendlyConstructor();
 
-        lock (_lock)
-        {
-            TestNotAlreadyRegistered<I>();
+        TestNotAlreadyRegistered<I>();
 
-            _toCreate[typeof(I)] = () => NewInstance<T>();
-        }
+        _toCreate[typeof(I)] = () => NewInstance<T>();
     }
 
     public void RegisterSingleton<I>(Func<I> creator)
@@ -70,42 +61,36 @@ internal class ServiceFactory : IServiceFactory
         typeof(I).MustBeInterface();
         typeof(I).MustBeAllowedService();
 
-        lock (_lock)
-        {
-            TestNotAlreadyRegistered<I>();
+        TestNotAlreadyRegistered<I>();
 
-            _toCreate[typeof(I)] = () => creator();
-        }
+        _toCreate[typeof(I)] = () => creator();
     }
 
     private object Get(Type i)
     {
         i.MustBeInterface();
 
-        lock (_lock)
-        {
-            var result = FromSingletons(i);
+        var result = FromSingletons(i);
 
-            if (result != null)
-                return result;
-
-            try
-            {
-                if (_toCreate.ContainsKey(i))
-                    result = _toCreate[i]();
-            }
-            catch (Exception ex)
-            {
-                throw new DeveloperException(ex, YouBrokeEverything, i.Name);
-            }
-
-            if (result == null)
-                throw new DeveloperException(YouNeverRegistered, i.Name);
-
-            _singletons.AddService(i, result);
-
+        if (result != null)
             return result;
+
+        try
+        {
+            if (_toCreate.ContainsKey(i))
+                result = _toCreate[i]();
         }
+        catch (Exception ex)
+        {
+            throw new DeveloperException(ex, YouBrokeEverything, i.Name);
+        }
+
+        if (result == null)
+            throw new DeveloperException(YouNeverRegistered, i.Name);
+
+        _singletons.AddService(i, result);
+
+        return result;
     }
 
     private void TestNotAlreadyRegistered<I>()
@@ -162,6 +147,9 @@ internal class ServiceFactory : IServiceFactory
         {
             _singletons.AddService(t, instance);
         }
+
+        if (instance == null)
+            throw new Exception();
 
         return instance;
     }

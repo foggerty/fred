@@ -10,13 +10,13 @@ public interface IApiSetup
         where A : IApiDefinition
         where C : IApiConfig<A>;
     
-    public IApiSetup RegisterEndpoint<A, E, Q>()
+    public IApiSetup AddHandler<A, E, Q>()
         where A : IApiDefinition
         where E : IApiEndpointHandler<Q>;
 
     /* Configure dependency injection. */
 
-    public IApiSetup AddServices(Action<IServicesSetup> setup);
+    public IApiSetup ConfigureServices(Action<IServicesSetup> setup);
 
     /* Certificate setup. */
 

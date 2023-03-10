@@ -1,4 +1,3 @@
-using Fred.Abstractions.Internal;
 using Fred.Abstractions.PublicFacing;
 
 namespace Fred.Implementations;
