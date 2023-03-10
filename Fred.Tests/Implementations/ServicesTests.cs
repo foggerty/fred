@@ -144,9 +144,9 @@ public class ServicesTests
         var provider       = new Services();
         var implementation = new TestImplementation();
 
-        provider.RegisterSingleton<ITestInterface, AnApiDefinition>(implementation);
+        provider.RegisterSingleton<ITestInterface, IApiDefinition>(implementation);
 
-        var test = provider.Get<ITestInterface, AnApiDefinition>();
+        var test = provider.Get<ITestInterface, IApiDefinition>();
 
         Assert.IsNotNull(test);
     }
@@ -156,9 +156,9 @@ public class ServicesTests
     {
         var provider = new Services();
 
-        provider.RegisterSingleton<ITestInterface, TestImplementation, AnApiDefinition>();
+        provider.RegisterSingleton<ITestInterface, TestImplementation, IApiDefinition>();
 
-        var test = provider.Get<ITestInterface, AnApiDefinition>();
+        var test = provider.Get<ITestInterface, IApiDefinition>();
 
         Assert.IsNotNull(test);
     }
@@ -168,17 +168,17 @@ public class ServicesTests
     {
         var provider = new Services();
 
-        provider.RegisterSingleton<ITestInterface, TestImplementation, AnApiDefinition>();
+        provider.RegisterSingleton<ITestInterface, TestImplementation, IApiDefinition>();
 
-        ShouldThrowDeveloperException(() => provider.Get<ITestInterface, AnotherApiDefinition>());
+        ShouldThrowDeveloperException(() => provider.Get<ITestInterface, ISomeRandomApi>());
     }
 
     [TestMethod]
     public void NoRoomForTwoInAnApi()
     {
         BadRegistrationThrowsDeveloperException(
-            setup => setup.RegisterSingleton<ITestInterface, TestImplementation, AnApiDefinition>(),
-            test => test.RegisterSingleton<ITestInterface, TestImplementation, AnApiDefinition>()
+            setup => setup.RegisterSingleton<ITestInterface, TestImplementation, IApiDefinition>(),
+            test => test.RegisterSingleton<ITestInterface, TestImplementation, IApiDefinition>()
         );
     }
 
@@ -217,6 +217,10 @@ public class ServicesTests
     }
 
     private interface ISomeOtherInterface : IFredService
+    {
+    }
+
+    private interface ISomeRandomApi : IApiDefinition
     {
     }
 

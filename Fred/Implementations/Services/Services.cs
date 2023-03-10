@@ -1,6 +1,7 @@
 using Fred.Abstractions.Internal.Services;
 using Fred.Abstractions.PublicFacing;
 using Fred.Abstractions.PublicFacing.Services;
+using Fred.Functions;
 
 namespace Fred.Implementations.Services;
 
@@ -74,6 +75,8 @@ internal class Services : IServicesSetup
     private IServiceFactory FactoryFor<A>()
         where A : IApiDefinition
     {
+        typeof(A).MustBeInterface();
+        
         if (_apiSingletons.TryGetValue(typeof(A), out var serviceFactory))
             return serviceFactory;
 
