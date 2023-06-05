@@ -11,7 +11,8 @@ internal interface IServiceFactory
         where I : IFredService;
 
     public void RegisterSingleton<I, T>()
-        where I : IFredService;
+        where I : IFredService
+        where T : class;
 
     public void RegisterSingleton<I>(Func<I> creator)
         where I : IFredService;

@@ -16,38 +16,30 @@ public class ServicesTests
         // Can only register interfaces.
         BadRegistrationThrowsDeveloperException(x => 
             x.RegisterSingleton<TestImplementation>(new TestImplementation()));
+        
+        // Can only register interfaces.
+        BadRegistrationThrowsDeveloperException(x => 
+            x.RegisterSingleton<TestImplementation, TestImplementation>());
 
         // Can only register a matching interface/implementation pair.
         BadRegistrationThrowsDeveloperException(x => 
             x.RegisterSingleton<ITestInterface, WrongImplementation>());
 
-        // Can only register services against an API's interface (not its type).
-        BadRegistrationThrowsDeveloperException(x =>
-            x.RegisterSingleton<ITestInterface, AnApiDefinition>(new TestImplementation()));
-
         // Can only register a matching interface/implementation pair for a given API.
         BadRegistrationThrowsDeveloperException(x =>
-            x.RegisterSingleton<ITestInterface, WrongImplementation, IApiDefinition>());
+            x.RegisterSingleton<ITestInterface, WrongImplementation, AnApiDefinition>());
 
-        // Can only register an implementation that has a valid constructor.
+        // Can only register implementations if they have constructors we can use.
         BadRegistrationThrowsDeveloperException(x => 
             x.RegisterSingleton<IBadConstructor, BadConstructor>());
 
         // Can only register an implementations for a given API that has a valid constructor.
         BadRegistrationThrowsDeveloperException(x =>
-            x.RegisterSingleton<IBadConstructor, BadConstructor, IApiDefinition>());
+            x.RegisterSingleton<IBadConstructor, BadConstructor, AnApiDefinition>());
 
-        // Can only register implementations if they have constructors we can use.
-        BadRegistrationThrowsDeveloperException(x => 
-            x.RegisterSingleton<IBadConstructor, BadConstructor>());
-        
-        // Can only register implementations got a given API if they have constructors we can use.
-        BadRegistrationThrowsDeveloperException(x => 
-            x.RegisterSingleton<IBadConstructor, BadConstructor, IApiDefinition>());
-        
-        // Can only register service and factory agaist an API's interface (not its type).
-        BadRegistrationThrowsDeveloperException(x => 
-            x.RegisterSingleton<ITestInterface, AnApiDefinition>(() => new TestImplementation()));
+        // Cannot register against an API definition class, not 
+        BadRegistrationThrowsDeveloperException(x =>
+            x.RegisterSingleton<ITestInterface, TestImplementation, IApiDefinition>());
     }
 
     [TestMethod]
@@ -144,9 +136,9 @@ public class ServicesTests
         var provider       = new Services();
         var implementation = new TestImplementation();
 
-        provider.RegisterSingleton<ITestInterface, IApiDefinition>(implementation);
+        provider.RegisterSingleton<ITestInterface, AnApiDefinition>(implementation);
 
-        var test = provider.Get<ITestInterface, IApiDefinition>();
+        var test = provider.Get<ITestInterface, AnApiDefinition>();
 
         Assert.IsNotNull(test);
     }
@@ -156,11 +148,12 @@ public class ServicesTests
     {
         var provider = new Services();
 
-        provider.RegisterSingleton<ITestInterface, TestImplementation, IApiDefinition>();
+        provider.RegisterSingleton<ITestInterface, TestImplementation, AnApiDefinition>();
 
-        var test = provider.Get<ITestInterface, IApiDefinition>();
+        var test = provider.Get<ITestInterface, AnApiDefinition>();
 
         Assert.IsNotNull(test);
+        Assert.IsTrue(test is TestImplementation);
     }
 
     [TestMethod]
@@ -168,17 +161,17 @@ public class ServicesTests
     {
         var provider = new Services();
 
-        provider.RegisterSingleton<ITestInterface, TestImplementation, IApiDefinition>();
+        provider.RegisterSingleton<ITestInterface, TestImplementation, AnApiDefinition>();
 
-        ShouldThrowDeveloperException(() => provider.Get<ITestInterface, ISomeRandomApi>());
+        ShouldThrowDeveloperException(() => provider.Get<ITestInterface, AnotherApiDefinition>());
     }
 
     [TestMethod]
     public void NoRoomForTwoInAnApi()
     {
         BadRegistrationThrowsDeveloperException(
-            setup => setup.RegisterSingleton<ITestInterface, TestImplementation, IApiDefinition>(),
-            test => test.RegisterSingleton<ITestInterface, TestImplementation, IApiDefinition>()
+            setup => setup.RegisterSingleton<ITestInterface, TestImplementation, AnApiDefinition>(),
+            test => test.RegisterSingleton<ITestInterface, TestImplementation, AnApiDefinition>()
         );
     }
 
@@ -244,7 +237,7 @@ public class ServicesTests
     {
     }
 
-    private record AnApiDefinition : IApiDefinition
+    private class AnApiDefinition : IApiDefinition
     {
         public string Name => "Test";
         public string Description => "Testing";

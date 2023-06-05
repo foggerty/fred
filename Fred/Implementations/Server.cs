@@ -49,8 +49,8 @@ internal class Server : IServerConfiguration
 
     public void StartApis(TimeSpan timeout)
     {
-        if (_certificate == null)
-            throw new DeveloperException(WeRegretToInformYou);
+        //if (_certificate == null)
+            //throw new DeveloperException(WeRegretToInformYou);
 
         // Create Kertrel instance.
         // register endpoint handlers
@@ -70,9 +70,6 @@ internal class Server : IServerConfiguration
     private void AddApi<A>()
         where A : IApiDefinition
     {
-        if (_apis.ContainsKey(typeof(A)))
-            return;
-
         var constructor = typeof(A).DefaultConstructorForDi();
 
         if (constructor == null)
@@ -87,8 +84,9 @@ internal class Server : IServerConfiguration
         where A : IApiDefinition
         where E : IApiEndpointHandler<Q>
     {
-        AddApi<A>();
-        
+        if (!_apis.ContainsKey(typeof(A)))
+            AddApi<A>();
+
         var clashingRoot = _apis
                            .GroupBy(a => a.Value.Root)
                            .Where(g => g.Count() > 1)

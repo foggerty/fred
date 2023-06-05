@@ -23,16 +23,16 @@ internal class ApiSetup : IApiSetup
 
     #region Configure APIs and Endpoints
 
-    public IApiSetup RegisterConfig<A, C>() 
-        where A : IApiDefinition 
-        where C : IApiConfig<A>
+    public IApiSetup RegisterConfig<A, C>()
+        where A : class, IApiDefinition 
+        where C : class, IApiConfig<A>
     {
-        throw new NotImplementedException();
+        return this;
     }
 
     public IApiSetup AddHandler<A, E, Q>()
-        where A : IApiDefinition
-        where E : IApiEndpointHandler<Q>
+        where A : class, IApiDefinition
+        where E : class, IApiEndpointHandler<Q>
     {
         _server.AddHandler<A, E, Q>();
 

@@ -7,5 +7,5 @@ public interface IServices
 
     public I Get<I, A>()
         where I : IFredService
-        where A : IApiDefinition;
+        where A : class, IApiDefinition;
 }

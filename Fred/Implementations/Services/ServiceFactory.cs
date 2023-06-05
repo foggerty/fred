@@ -44,6 +44,7 @@ internal class ServiceFactory : IServiceFactory
 
     public void RegisterSingleton<I, T>()
         where I : IFredService
+        where T : class
     {
         typeof(I).MustBeInterface();
         typeof(I).MustBeAllowedService();
@@ -52,7 +53,7 @@ internal class ServiceFactory : IServiceFactory
 
         TestNotAlreadyRegistered<I>();
 
-        _toCreate[typeof(I)] = () => NewInstance<T>();
+        _toCreate[typeof(I)] = NewInstance<T>;
     }
 
     public void RegisterSingleton<I>(Func<I> creator)
@@ -77,8 +78,8 @@ internal class ServiceFactory : IServiceFactory
 
         try
         {
-            if (_toCreate.ContainsKey(i))
-                result = _toCreate[i]();
+            if (_toCreate.TryGetValue(i, out var value))
+                result = value();
         }
         catch (Exception ex)
         {
@@ -108,6 +109,7 @@ internal class ServiceFactory : IServiceFactory
     }
 
     private T NewInstance<T>()
+        where T : class
     {
         return (T)NewInstance(typeof(T));
     }
@@ -143,13 +145,13 @@ internal class ServiceFactory : IServiceFactory
             instance = constructor.Invoke(parameterInstances.ToArray());
         }
 
+        if (instance == null)
+            throw new Exception("Someone REALLY messed up.");
+        
         lock (_lock)
         {
             _singletons.AddService(t, instance);
         }
-
-        if (instance == null)
-            throw new Exception();
 
         return instance;
     }

@@ -4,13 +4,30 @@ using Demo.Services;
 using Fred;
 using Fred.Abstractions.PublicFacing.Services;
 
-static void ServicesSetup(IServicesSetup setup)
+const string _globalName = "Global";
+const string _apiName = "Api Specific";
+
+static void GlobalServices(IServicesSetup setup)
 {
-    var weatherConfig = setup.Get<WeatherConfig>();
+    var service = new WunderService(_globalName);
     
-    Console.WriteLine(weatherConfig.Units);
+    setup.RegisterSingleton<IWunderService>(service);
+}
+
+static void ApiServices(IServicesSetup setup)
+{
+    var service = new WunderService(_apiName);
     
-    setup.RegisterSingleton(() => new WunderService());
+    setup.RegisterSingleton<IWunderService, WeatherApi>(service);
+}
+
+static void TestServices(IServicesSetup setup)
+{
+    if (setup.Get<IWunderService>().WunderName != _globalName)
+        throw new Exception("Oh noes!");
+    
+    if (setup.Get<IWunderService, WeatherApi>().WunderName != _apiName)
+        throw new Exception("Oh noes!");
 }
 
 var config = LoadConfig.FromDefault();
@@ -23,7 +40,9 @@ var server = Bootstrap
     .AddHandler<WombatApi, WombatEndpoint, string>()
     .AddHandler<WombatApi, WeatherEndpoint, int>()
     .AllowAccessToFileSystem()
-    .ConfigureServices(ServicesSetup)
+    .ConfigureServices(GlobalServices)
+    .ConfigureServices(ApiServices)
+    .ConfigureServices(TestServices)
     .Done();
 
 server.StartApis(TimeSpan.FromSeconds(30));

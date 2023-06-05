@@ -12,6 +12,16 @@ internal static class AssertionFunctions
 
     private const string NotAnAllowedService = "{0} is not on the list of allowed services.  Fred says no.";
 
+    private const string NotAClass = "I'm awfuly sorry, and to be perfectly honest the compiler should have picked up on this before even allowing you to run this code.";
+
+    public static void MustBeClass(this Type t)
+    {
+        if (t.IsClass)
+            return;
+
+        throw new DeveloperException(NotAClass);
+    }
+    
     public static void MustBeInterface(this Type t)
     {
         if (t.IsInterface)

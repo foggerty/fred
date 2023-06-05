@@ -9,7 +9,7 @@ public interface IServicesSetup : IServices
 
     public void RegisterSingleton<I, T>()
         where I : IFredService
-        where T : IFredService;
+        where T : class, IFredService;
 
     public void RegisterSingleton<I>(Func<I> creator)
         where I : IFredService;
@@ -18,14 +18,14 @@ public interface IServicesSetup : IServices
 
     public void RegisterSingleton<I, A>(I instance)
         where I : IFredService
-        where A : IApiDefinition;
+        where A : class;
 
     public void RegisterSingleton<I, T, A>()
         where I : IFredService
-        where T : IFredService
-        where A : IApiDefinition;
+        where T : class, IFredService
+        where A : class, IApiDefinition;
 
     public void RegisterSingleton<I, A>(Func<I> creator)
         where I : IFredService
-        where A : IApiDefinition;
+        where A : class, IApiDefinition;
 }

@@ -7,12 +7,12 @@ public interface IApiSetup
     /* Configure APIs and Endpoints */
 
     public IApiSetup RegisterConfig<A, C>()
-        where A : IApiDefinition
-        where C : IApiConfig<A>;
+        where A : class, IApiDefinition
+        where C : class, IApiConfig<A>;
     
     public IApiSetup AddHandler<A, E, Q>()
-        where A : IApiDefinition
-        where E : IApiEndpointHandler<Q>;
+        where A : class, IApiDefinition
+        where E : class, IApiEndpointHandler<Q>;
 
     /* Configure dependency injection. */
 

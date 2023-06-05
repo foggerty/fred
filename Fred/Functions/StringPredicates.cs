@@ -1,6 +1,6 @@
 namespace Fred.Functions;
 
-public static class StringFunctions
+public static class StringPredicates
 {
     public static bool EqualsThumbprint(this string test, string thumbprint)
     {

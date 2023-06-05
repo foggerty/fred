@@ -2,7 +2,7 @@ using Fred.Abstractions.PublicFacing.Services;
 
 namespace Demo.Services;
 
-public class IWunderService : IFredService
+public interface IWunderService : IFredService
 {
-    
+    string WunderName { get; set; }
 }
